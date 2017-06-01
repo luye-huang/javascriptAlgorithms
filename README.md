@@ -11,3 +11,5 @@ algorithms by javascript
 堆:索引堆优化
 
 二叉树: 二分; 插入; 查找; 三种遍历; 删除最大最小; 删除任意节点; 值相同节点属性; 子节点数属性; floor ceil; rank;
+二叉树隐患: 有序序列插入效率低
+扩展: 红黑树,trie, treap, 哈夫曼数, kd树

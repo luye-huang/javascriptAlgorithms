@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<div id="div1">1</div>
+<div id="div2">2<div>nei</div></div>
+<div id="div3">3</div>
+<div id="div4">4</div>
+<div id="div5">5</div>
+<script>
+    console.log('start');
+    //    setTimeout(function () {
+    //        console.log(2);
+    //    }, 1000);
+    //    for (var i = 0; i < 5; i++) {
+    //        setTimeout(function () {
+    //            console.log(i);
+    //        }, 1000);
+    //    }
+    //    console.log('end');
+    var eles = document.getElementsByTagName('div');
+    //    (function(n){
+    //        alert(n)
+    //    })(33);
+    for (var i = 0; i < 5; i++) {
+//        setTimeout(function () {
+//            console.log(i);
+//        }, 1000);
+        eles[i].onclick = function(){
+            alert(i);
+        }
+//        eles[i].onclick = (function (n) {
+//            return function(){
+//                alert(n)
+//            }
+//        })(i)
+
+    }
+    var a = new Array;
+    var b = new Array();
+    function parent() {
+
+    }
+    parent.prototype.say=function(){
+        alert(33);
+    }
+    function child() {
+        for(var prop in parent.prototype){
+            console.log(prop);
+            child.prototype[prop] = parent.prototype[prop];
+        }
+    }
+    child.prototype.cal=function(){
+        console.log(44);
+    }
+    //    child.prototype = parent.prototype;
+    var c = new child();
+    //    var a = 1;
+    //    function Fn1() {
+    //        var a = 2;
+    //        alert(this.a + a);
+    //    }
+    //    function Fn2(){
+    //        var a = 10;
+    //        Fn1();
+    //    }
+    //    Fn2();
+    //
+    //    var Fn3 = function(){
+    //        this.a=3;
+    //    }
+    //    Fn3.prototype = {
+    //        a:4
+    //    }
+    //    var fn3 = new Fn3();
+    //    Fn1.call(fn3);
+</script>
+</body>
+</html>
