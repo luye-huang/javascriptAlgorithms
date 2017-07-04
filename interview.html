@@ -6,11 +6,21 @@
 </head>
 <body>
 <div id="div1">1</div>
-<div id="div2">2<div>nei</div></div>
+<div id="div2" style="width:200px;height: 200px;background: yellow">2<div id="div22" style="width:100px;height: 100px;background: blue">
+    nei<div id="div222" style="width:50px;height: 50px;background: green">inner</div></div></div>
 <div id="div3">3</div>
 <div id="div4">4</div>
 <div id="div5">5</div>
 <script>
+    document.getElementById('div2').onclick=function(){
+        console.log(1)
+    }
+    document.getElementById('div22').onclick=function(){
+        console.log(2)
+    }
+    document.getElementById('div222').onclick=function(){
+        console.log(3)
+    }
     console.log('start');
     //    setTimeout(function () {
     //        console.log(2);
@@ -29,9 +39,9 @@
 //        setTimeout(function () {
 //            console.log(i);
 //        }, 1000);
-        eles[i].onclick = function(){
-            alert(i);
-        }
+//        eles[i].onclick = function(){
+//            alert(i);
+//        }
 //        eles[i].onclick = (function (n) {
 //            return function(){
 //                alert(n)
