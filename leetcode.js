@@ -105,9 +105,29 @@ var testArray = new Array(1000).fill(100);
 // console.log(threeSum(arr2));
 
 // 20
+console.log('(){}');
 var isValid = function(s) {
-
+  let stack = new Array();
+  for(let i=0;i<s.length;i++){
+    if(stack.length===0){
+      stack.push(s.charAt(i));
+    }
+    else{
+      const left = stack.pop();
+      if(!isMatch(left, s.charAt(i))){
+        return false;
+      }
+    }
+  }
+  return true;
 };
+
+function isMatch(left, right){
+  if(left + right === '()' || left + right === '[]' || left + right === '{}'){
+    return true;
+  }
+  return false;
+}
 // 167
 // var twoSum = function(numbers, target) {
 //   var result = [];
