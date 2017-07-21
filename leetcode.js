@@ -188,29 +188,40 @@ var testArray = new Array(1000).fill(100);
  * @param {ListNode} head
  * @return {ListNode}
  */
-var deleteDuplicates = function (head) {
-  if (head === null)return head;
-  const unique = new Set();
-  let node = head;
-  while (node && node.next !== null) {
-    unique.add(node.val);
-    if (unique.has(node.next.val)) {
-      node.next = node.next.next;
-    }
-    node = node.next;
-  }
-  return head;
-};
-function ListNode(val) {
-  this.val = val;
-  this.next = null;
-}
-const node1 = new ListNode(1);
-const node2 = new ListNode(1);
-const node3 = new ListNode(1);
-node1.next = node2;
-node2.next = node3;
-console.log(deleteDuplicates(node1));
+// var deleteDuplicates = function (head) {
+//   if (head === null)return head;
+//   const unique = new Set();
+//   let node = head, leftNode = null;
+//   while (node) {
+//     if (unique.has(node.val)) {
+//       if(node.next){
+//         leftNode.next = node.next;
+//         node = leftNode.next;
+//       }
+//       else{
+//         leftNode.next = null;
+//         delete node;
+//         break;
+//       }
+//     }
+//     else{
+//       unique.add(node.val);
+//       leftNode = node;
+//       node = node.next;
+//     }
+//   }
+//   return head;
+// };
+// function ListNode(val) {
+//   this.val = val;
+//   this.next = null;
+// }
+// const node1 = new ListNode(1);
+// const node2 = new ListNode(1);
+// const node3 = new ListNode(1);
+// node1.next = node2;
+// // node2.next = node3;
+// console.log(deleteDuplicates(node1));
 // 167
 // var twoSum = function(numbers, target) {
 //   var result = [];

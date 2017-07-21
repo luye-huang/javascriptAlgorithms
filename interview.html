@@ -51,6 +51,11 @@
     }
     var a = new Array;
     var b = new Array();
+    const obj1 = {};
+    const obj2 = obj1;
+    obj1.aa=2;
+    console.log(obj2.aa);
+    console.log('a==b?:', a==b);
     function parent() {
 
     }
