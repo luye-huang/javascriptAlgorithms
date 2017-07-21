@@ -176,6 +176,24 @@ var testArray = new Array(1000).fill(100);
 // }
 // console.log(isValid("("));
 
+
+//34
+/**
+ * @param {number[]} nums
+ * @param {number} target
+ * @return {number[]}
+ */
+// var searchRange = function (nums, target) {
+//   if (nums[0] > target || nums[nums.length - 1] < target)return [-1, -1];
+//   let left = 0, right = nums.length - 1;
+//   while (left <= right) {
+//     if (nums[left] < target)left++;
+//     if (nums[right] > target)right--;
+//     if (nums[left] === target && nums[right] === target)return [left, right];
+//   }
+//   return [-1, -1];
+// };
+// console.log(searchRange([0,0], 8))
 //83
 /**
  * Definition for singly-linked list.
