@@ -175,8 +175,7 @@ var testArray = new Array(1000).fill(100);
 //   return false;
 // }
 // console.log(isValid("("));
-
-
+open("http://www.w3school.com.cn")
 //34
 /**
  * @param {number[]} nums
@@ -337,6 +336,36 @@ var testArray = new Array(1000).fill(100);
 //   return true;
 // };
 // console.log(wordPattern("abba", "dog dog dog dog"))
+
+// 404
+/**
+ * Definition for a binary tree node.
+ * function TreeNode(val) {
+ *     this.val = val;
+ *     this.left = this.right = null;
+ * }
+ */
+/**
+ * @param {TreeNode} root
+ * @return {number}
+ */
+var sumOfLeftLeaves = function(root) {
+    seekLeft(root, 0);
+    return count;
+};
+count = 0;
+function seekLeft(node) {
+    if(node.right){
+        arguments.callee(node.right);
+    }
+    if(node.left){
+        arguments.callee(node.right);
+    }
+    else{
+        count += node.val;
+        return;
+    }
+}
 
 // 451
 // /**

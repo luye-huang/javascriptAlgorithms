@@ -92,6 +92,15 @@
     //    }
     //    var fn3 = new Fn3();
     //    Fn1.call(fn3);
+
+    let fn = function() {
+        this.attr = [0,1,2,3];
+    };
+    let obj = {};
+    console.log(Reflect.apply(fn, obj, []))
+    fn.apply(obj,[2,2]);
+    console.log(obj);
+
 </script>
 </body>
 </html>

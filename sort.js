@@ -144,9 +144,9 @@ const sort = {
   }
 };
 
-console.log(sort.selectionSort(array1));
-sort.resetArray();
-// console.log(sort.insertionSort(array1));
+// console.log(sort.selectionSort(array1));
+// sort.resetArray();
+console.log(sort.insertionSort(array1));
 // sort.resetArray();
 // console.log(sort.shellSort(array1));
 // sort.resetArray();

@@ -46,7 +46,6 @@
       [this.array[0], this.array[this.size() - 1]] = this._swap(this.array[0], this.array[this.size() - 1]);
       this.array.pop();
       this._shiftDown(0);
-      console.log(2);
       return result;
     },
     insert: function (item) {
