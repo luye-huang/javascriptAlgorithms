@@ -175,7 +175,6 @@ var testArray = new Array(1000).fill(100);
 //   return false;
 // }
 // console.log(isValid("("));
-open("http://www.w3school.com.cn")
 //34
 /**
  * @param {number[]} nums
@@ -340,33 +339,46 @@ open("http://www.w3school.com.cn")
 // 404
 /**
  * Definition for a binary tree node.
- * function TreeNode(val) {
- *     this.val = val;
- *     this.left = this.right = null;
- * }
+ function TreeNode(val) {
+      this.val = val;
+      this.left = this.right = null;
+  }
  */
 /**
  * @param {TreeNode} root
  * @return {number}
  */
-var sumOfLeftLeaves = function(root) {
-    seekLeft(root, 0);
-    return count;
+var sumOfLeftLeaves = function (root) {
+    if (!root) {
+        return 0;
+    }
+    if (!root.left && !root.right && arguments[1] && arguments[1].left == root) {
+        return root.val;
+    }
+    return arguments.callee(root.left, root) + arguments.callee(root.right, root);
 };
-count = 0;
-function seekLeft(node) {
-    if(node.right){
-        arguments.callee(node.right);
-    }
-    if(node.left){
-        arguments.callee(node.right);
-    }
-    else{
-        count += node.val;
-        return;
-    }
-}
 
+// [3,9,20,null,null,15,7]
+function TreeNode(val) {
+    this.val = val;
+    this.left = this.right = null;
+}
+var node0 = new TreeNode(1);
+var node01 = new TreeNode(2);
+var node1 = new TreeNode(3);
+var node2 = new TreeNode(9);
+var node3 = new TreeNode(20);
+var node4 = new TreeNode(15);
+var node5 = new TreeNode(7);
+
+// node0.left = node1;
+// node1.left = node2;
+node1.right = node3;
+node3.left = node4;
+node3.right = node5;
+
+// node0.right = node01;
+console.log(sumOfLeftLeaves(node0));
 // 451
 // /**
 //  * @param {string} s
