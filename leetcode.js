@@ -337,6 +337,7 @@ var testArray = new Array(1000).fill(100);
 // console.log(wordPattern("abba", "dog dog dog dog"))
 
 // 404
+// 发现: js递归时,递归层之间参数可以变化,用arguments来判断, 十分灵活
 /**
  * Definition for a binary tree node.
  function TreeNode(val) {
@@ -348,37 +349,37 @@ var testArray = new Array(1000).fill(100);
  * @param {TreeNode} root
  * @return {number}
  */
-var sumOfLeftLeaves = function (root) {
-    if (!root) {
-        return 0;
-    }
-    if (!root.left && !root.right && arguments[1] && arguments[1].left == root) {
-        return root.val;
-    }
-    return arguments.callee(root.left, root) + arguments.callee(root.right, root);
-};
+// var sumOfLeftLeaves = function (root) {
+//     if (!root) {
+//         return 0;
+//     }
+//     if (!root.left && !root.right && arguments[1] && arguments[1].left == root) {
+//         return root.val;
+//     }
+//     return arguments.callee(root.left, root) + arguments.callee(root.right, root);
+// };
 
 // [3,9,20,null,null,15,7]
-function TreeNode(val) {
-    this.val = val;
-    this.left = this.right = null;
-}
-var node0 = new TreeNode(1);
-var node01 = new TreeNode(2);
-var node1 = new TreeNode(3);
-var node2 = new TreeNode(9);
-var node3 = new TreeNode(20);
-var node4 = new TreeNode(15);
-var node5 = new TreeNode(7);
+// function TreeNode(val) {
+//     this.val = val;
+//     this.left = this.right = null;
+// }
+// var node0 = new TreeNode(1);
+// var node01 = new TreeNode(2);
+// var node1 = new TreeNode(3);
+// var node2 = new TreeNode(9);
+// var node3 = new TreeNode(20);
+// var node4 = new TreeNode(15);
+// var node5 = new TreeNode(7);
 
 // node0.left = node1;
 // node1.left = node2;
-node1.right = node3;
-node3.left = node4;
-node3.right = node5;
-
-// node0.right = node01;
-console.log(sumOfLeftLeaves(node0));
+// node1.right = node3;
+// node3.left = node4;
+// node3.right = node5;
+//
+// // node0.right = node01;
+// console.log(sumOfLeftLeaves(node0));
 // 451
 // /**
 //  * @param {string} s
@@ -438,3 +439,47 @@ console.log(sumOfLeftLeaves(node0));
 //   return result;
 // }
 // console.log(frequencySort("abaccadeeefaafcc"));
+
+
+// 54
+// 思路:蛇形层层剥层,记录layer,判断横纵操作是否超过矩阵长宽
+// 心得:要用动态的角度思考问题,result = result.concat(matrix[layers - 1].slice(layers - 1, cols - layers + 1)); 这部需要操作不断缩减的数组;
+//     边界的确定要十分精确,一开始用 if (i > rows || j > cols)break; 导致出界问题。细致思考区分了横纵向,通过测试。也可以判断每个操作的结束点是否与下个操作的起始点的方式解决;
+//     边界问题确定(+1, -1的小问题)快代入实例解决;
+
+/**
+ * @param {number[][]} matrix
+ * @return {number[]}
+ */
+// var spiralOrder = function (matrix) {
+//     if (!matrix[0])return [];
+//     const rows = matrix.length, cols = matrix[0].length;
+//     let i = 0, j = 0, layers = 1, result = [];
+//     while (true) {
+//         result = result.concat(matrix[layers - 1].slice(layers - 1, cols - layers + 1));
+//         i++;
+//         if (i > rows || j >= cols)break;
+//         for (let k = layers; k < rows - layers; k++) {
+//             result.push(matrix[k][cols - layers]);
+//         }
+//         j++;
+//         if (i >= rows || j > cols)break;
+//         result = result.concat(matrix[rows - layers].slice(layers - 1, cols - layers + 1).reverse());
+//         i++;
+//         if (i > rows || j >= cols)break;
+//         for (let k = rows - layers - 1; k > layers - 1; k--) {
+//             result.push(matrix[k][layers - 1]);
+//         }
+//         j++;
+//         if (i >= rows || j > cols)break;
+//         layers++;
+//     }
+//     return result;
+// };
+//
+// const mtx = [
+//     [1, 2, 3],
+//     [4, 5, 6],
+//     [7, 8, 9]
+// ];
+// console.log(spiralOrder([]));
