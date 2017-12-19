@@ -483,3 +483,32 @@ var testArray = new Array(1000).fill(100);
 //     [7, 8, 9]
 // ];
 // console.log(spiralOrder([]));
+
+
+// 55
+// 思路:确定数组是否有断点。从后向前如果元素为0,则向前循环,如果前面的元素值够大可跨过断点则继续外层循环,若内层循环后前面无这样的元素则返回false
+/**
+ * @param {number[]} nums
+ * @return {boolean}
+ */
+var canJump = function (nums) {
+    if (nums.length < 2)return true;
+    let index = 1;
+    for (let i = nums.length - 2; i >= 0; i--) {
+        if (!nums[i]) {
+            index = i - 1;
+            const posCliff = i;
+            while (index >= 0) {
+                if (nums[index] + index > posCliff)break;
+                index--;
+            }
+            if (index < 0) {
+                return false;
+            }
+        }
+    }
+    return true;
+};
+console.log(canJump([2,3,1,1,4]));
+console.log(canJump([3,2,1,0,4]));
+console.log(canJump([2,0,0]));
