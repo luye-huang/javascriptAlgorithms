@@ -5,98 +5,6 @@ var testArray = new Array(1000).fill(100);
 // 15
 // /**
 //  * @param {number[]}
-//  * @return {number[][]}
-//  * use map to store combinations of 2 elements, exceed time limit
-//  */
-// var threeSum = function (nums) {
-//   const result = [];
-//   console.time('all');
-//   let hasTwoZero = false;
-//   const map = new Map();
-//   if (nums.length < 3) {
-//     return [];
-//   }
-//   console.time('sorting');
-//   const sorted = nums.sort((a, b)=>a - b);
-//   // console.timeEnd('sorting');
-//   const sortedLessThan2 = [], setDuplicate = new Set();
-//   sorted.forEach((value, index, array)=> {
-//     if (index > 0 && array[index] === array[index - 1]) {
-//       if (value === 0) {
-//         if (hasTwoZero) {
-//           setDuplicate.add(value);
-//         }
-//         else {
-//           hasTwoZero = true;
-//         }
-//       }
-//       else {
-//         setDuplicate.add(value);
-//       }
-//     }
-//     if (index > 1 && array[index] === array[index - 1] && array[index] === array[index - 2]) {
-//     }
-//     else {
-//       sortedLessThan2.push(value);
-//     }
-//   });
-//   console.timeEnd('sorting');
-//   console.time('mapping');
-//   const min = sortedLessThan2[0] + sortedLessThan2[1];
-//   const max = sortedLessThan2[sortedLessThan2.length - 2] + sortedLessThan2[sortedLessThan2.length - 1];
-//   const first = sortedLessThan2[0];
-//   const last = sortedLessThan2[sortedLessThan2.length - 1];
-//   for (let i = 0; i < sortedLessThan2.length - 1; i++) {
-//     if (sortedLessThan2[i] > 0 - min)break;
-//     else if (sortedLessThan2[i] < 0 - max)continue;
-//     for (let j = i + 1; j < sortedLessThan2.length; j++) {
-//       const val = sortedLessThan2[i] + sortedLessThan2[j];
-//       if (val > 0 - first)break;
-//       else if (val < 0 - last)continue;
-//       if (map.has(val)) {
-//         map.get(val).add(sortedLessThan2[i] + ',' + sortedLessThan2[j]);
-//       }
-//       else {
-//         let set = new Set();
-//         set.add(sortedLessThan2[i] + ',' + sortedLessThan2[j]);
-//         map.set(val, set);
-//       }
-//     }
-//   }
-//   console.timeEnd('mapping');
-//   console.log(sortedLessThan2);
-//   console.log(map);
-//   for (let i = 0; i < sortedLessThan2.length; i++) {
-//     const target = 0 - sortedLessThan2[i];
-//     if (i > 0 && sortedLessThan2[i] === sortedLessThan2[i - 1]) {
-//       continue;
-//     }
-//     if (target > max || target < min)continue;
-//     let pairs;
-//     if (pairs = map.get(target)) {
-//       for (let item of pairs) {
-//         const arr = item.split(',');
-//         if (!setDuplicate.has(sortedLessThan2[i]) && arr.includes(sortedLessThan2[i] + '')) {
-//
-//         }
-//         else {
-//           const qualify = [];
-//           const [first, second] = item.split(',');
-//           if (sortedLessThan2[i] <= first) {
-//             qualify.push(sortedLessThan2[i]);
-//             qualify.push(Number.parseInt(first));
-//             qualify.push(Number.parseInt(second));
-//             result.push(qualify);
-//           }
-//         }
-//       }
-//     }
-//   }
-//   console.timeEnd('all');
-//   return result;
-// };
-// /**
-//  * @param {number[]}
 //  * @return {number[][]
 //  * use two pointers
 //  */
@@ -491,24 +399,126 @@ var testArray = new Array(1000).fill(100);
  * @param {number[]} nums
  * @return {boolean}
  */
-var canJump = function (nums) {
-    if (nums.length < 2)return true;
-    let index = 1;
-    for (let i = nums.length - 2; i >= 0; i--) {
-        if (!nums[i]) {
-            index = i - 1;
-            const posCliff = i;
-            while (index >= 0) {
-                if (nums[index] + index > posCliff)break;
-                index--;
+// var canJump = function (nums) {
+//     if (nums.length < 2)return true;
+//     let index = 1;
+//     for (let i = nums.length - 2; i >= 0; i--) {
+//         if (!nums[i]) {
+//             index = i - 1;
+//             const posCliff = i;
+//             while (index >= 0) {
+//                 if (nums[index] + index > posCliff)break;
+//                 index--;
+//             }
+//             if (index < 0) {
+//                 return false;
+//             }
+//         }
+//     }
+//     return true;
+// };
+// console.log(canJump([2,3,1,1,4]));
+// console.log(canJump([3,2,1,0,4]));
+// console.log(canJump([2,0,0]));
+
+
+// 316
+/**
+ * @param {string} s
+ * @return {string}
+ */
+var removeDuplicateLetters = function (s) {
+    const arr = Array.from(s);
+    // const tpl = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z'];
+    const stack = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z'];
+    // const backtrack = new Map();
+    console.log(arr);
+    let result = '', posTemp = -1, safeRangeLeft = s.indexOf('a'), safeRangeRight = -1;
+    while (stack.length > 0) {
+        const letter = stack.shift();
+        if (arr.includes(letter)) {
+            let isValueFoundAfterSafeRange = false;
+            for (let j = safeRangeRight + 1; j < arr.length; j++) {
+                if (arr[j] == letter) {
+                    isValueFoundAfterSafeRange = true;
+                    posTemp = j;
+                    for (let k = j + 1; k < arr.length; k++) {
+                        if (arr[k] == letter) {
+                            arr[k] += 0;
+                        }
+                    }
+                    break;
+                }
             }
-            if (index < 0) {
-                return false;
+            if (isValueFoundAfterSafeRange) {
+                for (let j = 0; j < safeRangeRight; j++) {
+                    if (arr[j] == letter) {
+                        arr[j] += 0;
+                    }
+                }
+                safeRangeRight = posTemp;
+            } else {
+                let isValueFoundInSafeRange = false;
+                const rearrange = [];
+                for (let j = safeRangeRight - 1; j > safeRangeLeft; j--) {
+                    if (arr[j] == letter) {
+                        posTemp = j;
+                        for (let k = j - 1; k >= 0; k--) {
+                            if (arr[k] == letter) {
+                                arr[k] += 0;
+                            }
+                        }
+                        isValueFoundInSafeRange = true;
+                        for (let k = safeRangeRight; k > posTemp + 1; k--) {
+                            if (letter > arr[k] && arr[k].length == 1) {
+                                rearrange.unshift({pos: k, value: arr[k]});
+                            }
+                        }
+                        rearrange.forEach((value) => {
+                            for (let k = safeRangeLeft + 1; k < posTemp; k++) {
+                                if (value.value + 0 == arr[k]) {
+                                    arr[value.pos] = arr[k];
+                                    arr[k] = arr[k].substr(0, 1);
+                                }
+                            }
+                        });
+                        safeRangeRight = posTemp;
+                        break;
+                    }
+                }
+                if (!isValueFoundInSafeRange) {
+                    for (let j = 0; j < safeRangeLeft; j++) {
+                        if (letter == arr[j]) {
+                            for (let k = j + 1; k < safeRangeLeft; k++) {
+                                if (arr[k] == letter) {
+                                    arr[k] += 0;
+                                }
+                            }
+                            break;
+                        }
+                    }
+                }
             }
         }
     }
-    return true;
+    console.log(arr);
+    arr.forEach((val) => {
+        if (val.length == 1) {
+            result += val;
+        }
+    });
+    console.log(result);
+    return result;
 };
-console.log(canJump([2,3,1,1,4]));
-console.log(canJump([3,2,1,0,4]));
-console.log(canJump([2,0,0]));
+
+// function disableOtherElements(arr, val) {
+//     arr.forEach((value, index, array) => {
+//         if (value == val) {
+//             array[index] += 0;
+//         }
+//     });
+// }
+
+var ss = 'cbacdcbc';
+var sss = 'cbcba';
+console.log(removeDuplicateLetters(ss));
