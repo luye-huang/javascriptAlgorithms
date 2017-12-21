@@ -429,7 +429,8 @@ var testArray = new Array(1000).fill(100);
  */
 var removeDuplicateLetters = function (s) {
     const arr = Array.from(s);
-    // const tpl = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z'];
+    const arrCopy = Array.from(s);
+    const tpl = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z'];
     const stack = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z'];
     // const backtrack = new Map();
     console.log(arr);
@@ -474,11 +475,13 @@ var removeDuplicateLetters = function (s) {
                                 rearrange.unshift({pos: k, value: arr[k]});
                             }
                         }
+                        const converted = [];
                         rearrange.forEach((value) => {
                             for (let k = safeRangeLeft + 1; k < posTemp; k++) {
-                                if (value.value + 0 == arr[k]) {
+                                if (!converted.includes(value.value) && value.value + 0 == arr[k] && !arr.slice(k + 1, posTemp).some((el) => el.length == 1 && el < arr[k].substr(0, 1))) {
                                     arr[value.pos] = arr[k];
                                     arr[k] = arr[k].substr(0, 1);
+                                    converted.push(arr[k]);
                                 }
                             }
                         });
@@ -489,14 +492,34 @@ var removeDuplicateLetters = function (s) {
                 if (!isValueFoundInSafeRange) {
                     for (let j = 0; j < safeRangeLeft; j++) {
                         if (letter == arr[j]) {
-                            for (let k = j + 1; k < safeRangeLeft; k++) {
+                            if (arrCopy.slice(j + 1, safeRangeLeft).some((el)=>el < letter)) {
+                                arr[j] += 0;
+                                continue;
+                            }
+                            posTemp = j;
+                            const rearrange = [];
+                            for (let k = j + 1; k <= safeRangeRight; k++) {
                                 if (arr[k] == letter) {
                                     arr[k] += 0;
                                 }
+                                if (arr[k] < letter && arr[k].length == 1) {
+                                    rearrange.unshift({pos: k, value: arr[k]});
+                                }
                             }
+                            const converted = [];
+                            rearrange.forEach((value) => {
+                                for (let k = 0; k < posTemp; k++) {
+                                    if (value.value + 0 == arr[k] && !converted.includes(value.value)) {
+                                        arr[value.pos] = arr[k];
+                                        arr[k] = arr[k].substr(0, 1);
+                                        converted.push(arr[k]);
+                                    }
+                                }
+                            });
                             break;
                         }
                     }
+                    safeRangeLeft = posTemp;
                 }
             }
         }
@@ -511,6 +534,11 @@ var removeDuplicateLetters = function (s) {
     return result;
 };
 
+function isValidPosition(str, start, end, val) {
+    const arr = Array.from(str);
+    return arr.slice(start, end).some((el) => el < val);
+}
+
 // function disableOtherElements(arr, val) {
 //     arr.forEach((value, index, array) => {
 //         if (value == val) {
@@ -521,4 +549,8 @@ var removeDuplicateLetters = function (s) {
 
 var ss = 'cbacdcbc';
 var sss = 'cbcba';
-console.log(removeDuplicateLetters(ss));
+//"cbcab"
+console.log(removeDuplicateLetters(ss), 'acdb');
+console.log(removeDuplicateLetters("cbaddabaa"), 'cadb');
+console.log(removeDuplicateLetters("bbcab"), 'bca');
+console.log(removeDuplicateLetters("cbcab"), 'bca');
