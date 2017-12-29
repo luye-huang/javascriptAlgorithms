@@ -428,125 +428,120 @@ var testArray = new Array(1000).fill(100);
  * @return {string}
  */
 var removeDuplicateLetters = function (s) {
-    const arr = Array.from(s);
-    const arrCopy = Array.from(s);
-    const tpl = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z'];
-    const stack = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z'];
-    // const backtrack = new Map();
-    console.log(arr);
-    let result = '', posTemp = -1, safeRangeLeft = s.indexOf('a'), safeRangeRight = -1;
-    while (stack.length > 0) {
-        const letter = stack.shift();
-        if (arr.includes(letter)) {
-            let isValueFoundAfterSafeRange = false;
-            for (let j = safeRangeRight + 1; j < arr.length; j++) {
-                if (arr[j] == letter) {
-                    isValueFoundAfterSafeRange = true;
-                    posTemp = j;
-                    for (let k = j + 1; k < arr.length; k++) {
-                        if (arr[k] == letter) {
-                            arr[k] += 0;
-                        }
-                    }
-                    break;
-                }
-            }
-            if (isValueFoundAfterSafeRange) {
-                for (let j = 0; j < safeRangeRight; j++) {
-                    if (arr[j] == letter) {
-                        arr[j] += 0;
-                    }
-                }
-                safeRangeRight = posTemp;
-            } else {
-                let isValueFoundInSafeRange = false;
-                const rearrange = [];
-                for (let j = safeRangeRight - 1; j > safeRangeLeft; j--) {
-                    if (arr[j] == letter) {
-                        posTemp = j;
-                        for (let k = j - 1; k >= 0; k--) {
-                            if (arr[k] == letter) {
-                                arr[k] += 0;
-                            }
-                        }
-                        isValueFoundInSafeRange = true;
-                        for (let k = safeRangeRight; k > posTemp + 1; k--) {
-                            if (letter > arr[k] && arr[k].length == 1) {
-                                rearrange.unshift({pos: k, value: arr[k]});
-                            }
-                        }
-                        const converted = [];
-                        rearrange.forEach((value) => {
-                            for (let k = safeRangeLeft + 1; k < posTemp; k++) {
-                                if (!converted.includes(value.value) && value.value + 0 == arr[k] && !arr.slice(k + 1, posTemp).some((el) => el.length == 1 && el < arr[k].substr(0, 1))) {
-                                    arr[value.pos] = arr[k];
-                                    arr[k] = arr[k].substr(0, 1);
-                                    converted.push(arr[k]);
-                                }
-                            }
-                        });
-                        safeRangeRight = posTemp;
-                        break;
-                    }
-                }
-                if (!isValueFoundInSafeRange) {
-                    for (let j = 0; j < safeRangeLeft; j++) {
-                        if (letter == arr[j]) {
-                            if (arrCopy.slice(j + 1, safeRangeLeft).some((el)=>el < letter)) {
-                                arr[j] += 0;
-                                continue;
-                            }
-                            posTemp = j;
-                            const rearrange = [];
-                            for (let k = j + 1; k <= safeRangeRight; k++) {
-                                if (arr[k] == letter) {
-                                    arr[k] += 0;
-                                }
-                                if (arr[k] < letter && arr[k].length == 1) {
-                                    rearrange.unshift({pos: k, value: arr[k]});
-                                }
-                            }
-                            const converted = [];
-                            rearrange.forEach((value) => {
-                                for (let k = 0; k < posTemp; k++) {
-                                    if (value.value + 0 == arr[k] && !converted.includes(value.value)) {
-                                        arr[value.pos] = arr[k];
-                                        arr[k] = arr[k].substr(0, 1);
-                                        converted.push(arr[k]);
-                                    }
-                                }
-                            });
-                            break;
-                        }
-                    }
-                    safeRangeLeft = posTemp;
-                }
-            }
-        }
-    }
-    console.log(arr);
+    let arr = Array.from(s), result = '';
+    arr = processArray(arr);
     arr.forEach((val) => {
         if (val.length == 1) {
             result += val;
         }
     });
-    console.log(result);
     return result;
 };
 
-function isValidPosition(str, start, end, val) {
-    const arr = Array.from(str);
-    return arr.slice(start, end).some((el) => el < val);
+function processArray(array) {
+    let rangeLeft = -1, rangeRight = -1;
+    const stackFull = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z'];
+    let stack = stackFull.filter((el) => array.includes(el));
+    const stackOriginal = stackFull.filter((el) => array.includes(el));
+    stack.push('zzz');
+    debugger;
+    while (stack.length > 0) {
+        const eleCur = stack.shift();
+        const idxBeforeRange = array.findIndex((el)=>el == eleCur || el == eleCur + 0);
+        if (idxBeforeRange < 0) {
+            continue;
+        }
+        let idxAfterRange = array.slice(rangeRight + 1).findIndex((el)=>el == eleCur || el == eleCur + 0);
+        //先范围后找.如果找到,在范围后区间选个最前面的位置保留,其余全部+0非法掉,维护范围右界
+        if (idxAfterRange > -1) {
+            //在原数组中长度
+            idxAfterRange += rangeRight + 1;
+            rangeRight = idxAfterRange;
+            if (rangeLeft == -1)rangeLeft = rangeRight;
+            array = disableOtherElements(array, eleCur, rangeRight);
+        } else {
+            //范围后没找到,先找范围中,后找范围前
+            let idxInRange = array.slice(rangeLeft + 1, rangeRight).findIndex((el)=>el == eleCur || el == eleCur + 0);
+            //范围中找到, 插入点到范围有界间小于插入点值的点有可能需要调整到范围左界到插入点的范围,如果有按照大小顺序遍历换位同时维护边界
+            let stackToRearrange = [];
+            if (idxInRange > -1) {
+                idxInRange += rangeLeft + 1;
+                array = disableOtherElements(array, eleCur, idxInRange);
+                // const arrSource = array.slice(idxInRange + 1);
+                let idxBeginInsert = rangeLeft + 1;
+                const eleChecked = stackOriginal.slice(0, stackOriginal.indexOf(eleCur));
+                for (let i = 0; i < eleChecked.length && idxBeginInsert < idxBeforeRange - 1; i++) {
+                    let idx = array.indexOf(eleChecked[i]), idx0 = array.slice(idxBeginInsert, idxInRange).indexOf(eleChecked[i] + 0);
+                    if (idx != -1 && idx0 != -1) {
+                        idx0 += idxBeginInsert;
+                        array[idx0] = eleChecked[i];
+                        array[idx] = eleChecked[i] + 0;
+                        if (idx == rangeRight) {
+                            rangeRight = getNewBorder(array, idx, eleChecked[i]) || rangeRight;
+                        }
+                        idxBeginInsert = idx0 + 1;
+                    }
+                }
+                //没有在范围内找到,在范围前找到, 需要判断插入点到旧范围左端是否有小于插入点值的元素需要移动到0到插入点间;维护范围左界
+            } else {
+                array = disableOtherElements(array, eleCur, idxBeforeRange);
+                // stackToRearrange = getRearrangedElements(array, eleCur, idxBeforeRange + 1, 0, idxBeforeRange);
+                let idxBeginInsert = 0;
+                const eleChecked = stackOriginal.slice(0, stackOriginal.indexOf(eleCur));
+                for (let i = 0; i < eleChecked.length && idxBeginInsert < idxBeforeRange - 1; i++) {
+                    let idx = array.indexOf(eleChecked[i]), idx0 = array.slice(idxBeginInsert, idxBeforeRange).indexOf(eleChecked[i] + 0);
+                    if (idx != -1 && idx0 != -1) {
+                        idx0 += idxBeginInsert;
+                        array[idx0] = eleChecked[i];
+                        array[idx] = eleChecked[i] + 0;
+                        if (idx < rangeLeft) {
+                            rangeLeft = idx;
+                        }
+                        idxBeginInsert = idx0 + 1;
+                    }
+                }
+                rangeLeft = idxBeforeRange;
+            }
+            stack = stackToRearrange.concat(stack);
+        }
+    }
+    return array;
 }
 
-// function disableOtherElements(arr, val) {
-//     arr.forEach((value, index, array) => {
-//         if (value == val) {
-//             array[index] += 0;
-//         }
-//     });
-// }
+//获得需要重新安排的元素
+function getRearrangedElements(arr, val, sourceStart, targetStart, targetEnd) {
+    let stackToArrange = [], eleToMove = [], arrToPlace = arr.slice(targetStart, targetEnd), arrToSearch = arr.slice(sourceStart);
+    arrToSearch.forEach((v) => {
+        if (v.substr(0, 1) < val && !eleToMove.includes(v.substr(0, 1))) {
+            eleToMove.push(v.substr(0, 1));
+        }
+    });
+    eleToMove.forEach((v) => {
+        if ((arrToPlace.includes(v) || arrToPlace.includes(v + 0)) && !stackToArrange.includes(v)) {
+            stackToArrange.push(v);
+        }
+    });
+    return stackToArrange.sort((a, b) => a > b);
+}
 
+//disable重复元素的其他元素
+function disableOtherElements(arr, val, idx) {
+    arr.forEach((value, index, array) => {
+        if (value == val) {
+            array[index] += 0;
+        }
+    });
+    arr[idx] = val;
+    return arr;
+}
+
+function getNewBorder(arr, start, val) {
+    for (let i = start; i >= 0; i--) {
+        if (arr[i] < val)return i;
+    }
+}
+// console.log(getRearrangedElements(['a', 'b', 'c', 'b', 'd', 'b'], 'z', 1, 6, 0, 4));
+// console.log(processArray(['a', 'b', 'c', 'b'], ['b']));
 var ss = 'cbacdcbc';
 var sss = 'cbcba';
 //"cbcab"
