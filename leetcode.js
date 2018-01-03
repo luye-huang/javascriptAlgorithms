@@ -429,117 +429,61 @@ var testArray = new Array(1000).fill(100);
  */
 var removeDuplicateLetters = function (s) {
     let arr = Array.from(s), result = '';
-    arr = processArray(arr);
-    arr.forEach((val) => {
-        if (val.length == 1) {
-            result += val;
+    const keys = [...new Set(arr)].sort((a, b) => a > b);
+    const stack = [...new Set(arr)].sort((a, b) => a > b);
+    let dict = storeInfo(arr);
+    let values = [...dict.values()];
+    while (stack.length > 0) {
+        const element = stack.shift();
+        const elementInfo = dict.get(element);
+        const positions = elementInfo.positions;
+        const keysToCompare = keys.slice(0, keys.indexOf(element));
+        elementInfo.positionCurrent = positions[positions.length - 1];
+        let stackAdd = true;
+        const boundary = elementInfo.positionTrack ? elementInfo.positionTrack : arr.length;
+        for (let [i, v] of positions.entries()) {
+            if (arr.slice(0, v).every((val, idx) =>!keysToCompare.includes(val) || val < element || dict.get(val).positionCurrent != idx) &&
+                arr.slice(v + 1, boundary).every((val, idx)=>!keysToCompare.includes(val) || val > element || dict.get(val).positionCurrent != idx + v + 1)) {
+                elementInfo.positionCurrent = v;
+                stackAdd = false;
+                break;
+            }
         }
-    });
+        if (stackAdd) {
+            const keysToAdd = keysToCompare.reverse();
+            for (let v of keysToAdd) {
+                const elementCompareInfo = dict.get(v);
+                if (elementCompareInfo.fixed)continue;
+                if (elementCompareInfo.positionCurrent > elementInfo.positionCurrent && arr.slice(0, elementInfo.positionCurrent).includes(elementCompareInfo.name)) {
+                    dict.get(v).positionTrack = elementInfo.positionCurrent;
+                    stack.unshift(v);
+                }
+            }
+        }
+        if (elementInfo.positionTrack)elementInfo.positionTrack = null;
+    }
+    console.log(dict);
+    values.sort((a, b) => a.positionCurrent - b.positionCurrent);
+    values.forEach((v) => {
+        result += v.name;
+    })
     return result;
 };
 
-function processArray(array) {
-    let rangeLeft = -1, rangeRight = -1;
-    const stackFull = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z'];
-    let stack = stackFull.filter((el) => array.includes(el));
-    const stackOriginal = stackFull.filter((el) => array.includes(el));
-    stack.push('zzz');
-    debugger;
-    while (stack.length > 0) {
-        const eleCur = stack.shift();
-        const idxBeforeRange = array.findIndex((el)=>el == eleCur || el == eleCur + 0);
-        if (idxBeforeRange < 0) {
-            continue;
-        }
-        let idxAfterRange = array.slice(rangeRight + 1).findIndex((el)=>el == eleCur || el == eleCur + 0);
-        //先范围后找.如果找到,在范围后区间选个最前面的位置保留,其余全部+0非法掉,维护范围右界
-        if (idxAfterRange > -1) {
-            //在原数组中长度
-            idxAfterRange += rangeRight + 1;
-            rangeRight = idxAfterRange;
-            if (rangeLeft == -1)rangeLeft = rangeRight;
-            array = disableOtherElements(array, eleCur, rangeRight);
+
+function storeInfo(array) {
+    const dict = new Map();
+    array.forEach((v, i) => {
+        if (dict.has(v)) {
+            dict.get(v).fixed = false;
+            dict.get(v).positions.push(i);
         } else {
-            //范围后没找到,先找范围中,后找范围前
-            let idxInRange = array.slice(rangeLeft + 1, rangeRight).findIndex((el)=>el == eleCur || el == eleCur + 0);
-            //范围中找到, 插入点到范围有界间小于插入点值的点有可能需要调整到范围左界到插入点的范围,如果有按照大小顺序遍历换位同时维护边界
-            let stackToRearrange = [];
-            if (idxInRange > -1) {
-                idxInRange += rangeLeft + 1;
-                array = disableOtherElements(array, eleCur, idxInRange);
-                // const arrSource = array.slice(idxInRange + 1);
-                let idxBeginInsert = rangeLeft + 1;
-                const eleChecked = stackOriginal.slice(0, stackOriginal.indexOf(eleCur));
-                for (let i = 0; i < eleChecked.length && idxBeginInsert < idxBeforeRange - 1; i++) {
-                    let idx = array.indexOf(eleChecked[i]), idx0 = array.slice(idxBeginInsert, idxInRange).indexOf(eleChecked[i] + 0);
-                    if (idx != -1 && idx0 != -1) {
-                        idx0 += idxBeginInsert;
-                        array[idx0] = eleChecked[i];
-                        array[idx] = eleChecked[i] + 0;
-                        if (idx == rangeRight) {
-                            rangeRight = getNewBorder(array, idx, eleChecked[i]) || rangeRight;
-                        }
-                        idxBeginInsert = idx0 + 1;
-                    }
-                }
-                //没有在范围内找到,在范围前找到, 需要判断插入点到旧范围左端是否有小于插入点值的元素需要移动到0到插入点间;维护范围左界
-            } else {
-                array = disableOtherElements(array, eleCur, idxBeforeRange);
-                // stackToRearrange = getRearrangedElements(array, eleCur, idxBeforeRange + 1, 0, idxBeforeRange);
-                let idxBeginInsert = 0;
-                const eleChecked = stackOriginal.slice(0, stackOriginal.indexOf(eleCur));
-                for (let i = 0; i < eleChecked.length && idxBeginInsert < idxBeforeRange - 1; i++) {
-                    let idx = array.indexOf(eleChecked[i]), idx0 = array.slice(idxBeginInsert, idxBeforeRange).indexOf(eleChecked[i] + 0);
-                    if (idx != -1 && idx0 != -1) {
-                        idx0 += idxBeginInsert;
-                        array[idx0] = eleChecked[i];
-                        array[idx] = eleChecked[i] + 0;
-                        if (idx < rangeLeft) {
-                            rangeLeft = idx;
-                        }
-                        idxBeginInsert = idx0 + 1;
-                    }
-                }
-                rangeLeft = idxBeforeRange;
-            }
-            stack = stackToRearrange.concat(stack);
-        }
-    }
-    return array;
-}
-
-//获得需要重新安排的元素
-function getRearrangedElements(arr, val, sourceStart, targetStart, targetEnd) {
-    let stackToArrange = [], eleToMove = [], arrToPlace = arr.slice(targetStart, targetEnd), arrToSearch = arr.slice(sourceStart);
-    arrToSearch.forEach((v) => {
-        if (v.substr(0, 1) < val && !eleToMove.includes(v.substr(0, 1))) {
-            eleToMove.push(v.substr(0, 1));
+            dict.set(v, {name: v, positions: [i], fixed: true, positionCurrent: i});
         }
     });
-    eleToMove.forEach((v) => {
-        if ((arrToPlace.includes(v) || arrToPlace.includes(v + 0)) && !stackToArrange.includes(v)) {
-            stackToArrange.push(v);
-        }
-    });
-    return stackToArrange.sort((a, b) => a > b);
+    return dict;
 }
 
-//disable重复元素的其他元素
-function disableOtherElements(arr, val, idx) {
-    arr.forEach((value, index, array) => {
-        if (value == val) {
-            array[index] += 0;
-        }
-    });
-    arr[idx] = val;
-    return arr;
-}
-
-function getNewBorder(arr, start, val) {
-    for (let i = start; i >= 0; i--) {
-        if (arr[i] < val)return i;
-    }
-}
 // console.log(getRearrangedElements(['a', 'b', 'c', 'b', 'd', 'b'], 'z', 1, 6, 0, 4));
 // console.log(processArray(['a', 'b', 'c', 'b'], ['b']));
 var ss = 'cbacdcbc';
@@ -549,5 +493,6 @@ console.log(removeDuplicateLetters(ss), 'acdb');
 console.log(removeDuplicateLetters("cbaddabaa"), 'cadb');
 console.log(removeDuplicateLetters("bbcab"), 'bca');
 console.log(removeDuplicateLetters("cbcab"), 'bca');
+console.log(removeDuplicateLetters("ccbab"), 'cab');
 
 
