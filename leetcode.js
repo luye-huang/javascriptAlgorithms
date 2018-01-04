@@ -438,12 +438,13 @@ var removeDuplicateLetters = function (s) {
         const elementInfo = dict.get(element);
         const positions = elementInfo.positions;
         const keysToCompare = keys.slice(0, keys.indexOf(element));
+        elementInfo.positionCompare && keysToCompare.push(elementInfo.positionCompare);
         elementInfo.positionCurrent = positions[positions.length - 1];
         let stackAdd = true;
         const boundary = elementInfo.positionTrack ? elementInfo.positionTrack : arr.length;
         for (let [i, v] of positions.entries()) {
             if (arr.slice(0, v).every((val, idx) =>!keysToCompare.includes(val) || val < element || dict.get(val).positionCurrent != idx) &&
-                arr.slice(v + 1, boundary).every((val, idx)=>!keysToCompare.includes(val) || val > element || dict.get(val).positionCurrent != idx + v + 1)) {
+                arr.slice(v + 1, boundary).every((val, idx)=>!keysToCompare.includes(val) || val > element || dict.get(val).positionCurrent != idx + v + 1) && v < boundary) {
                 elementInfo.positionCurrent = v;
                 stackAdd = false;
                 break;
@@ -456,17 +457,21 @@ var removeDuplicateLetters = function (s) {
                 if (elementCompareInfo.fixed)continue;
                 if (elementCompareInfo.positionCurrent > elementInfo.positionCurrent && arr.slice(0, elementInfo.positionCurrent).includes(elementCompareInfo.name)) {
                     dict.get(v).positionTrack = elementInfo.positionCurrent;
+                    dict.get(v).positionCompare = elementInfo.name;
                     stack.unshift(v);
                 }
             }
         }
-        if (elementInfo.positionTrack)elementInfo.positionTrack = null;
+        if (elementInfo.positionTrack) {
+            elementInfo.positionTrack = null;
+            elementInfo.positionCompare = null;
+        }
     }
     console.log(dict);
     values.sort((a, b) => a.positionCurrent - b.positionCurrent);
     values.forEach((v) => {
         result += v.name;
-    })
+    });
     return result;
 };
 
@@ -489,10 +494,15 @@ function storeInfo(array) {
 var ss = 'cbacdcbc';
 var sss = 'cbcba';
 //"cbcab"
-console.log(removeDuplicateLetters(ss), 'acdb');
-console.log(removeDuplicateLetters("cbaddabaa"), 'cadb');
-console.log(removeDuplicateLetters("bbcab"), 'bca');
-console.log(removeDuplicateLetters("cbcab"), 'bca');
-console.log(removeDuplicateLetters("ccbab"), 'cab');
+// console.log(removeDuplicateLetters(ss), 'acdb');
+// console.log(removeDuplicateLetters("cbaddabaa"), 'cadb');
+// console.log(removeDuplicateLetters("bbcab"), 'bca');
+// console.log(removeDuplicateLetters("cbcab"), 'bca');
+// console.log(removeDuplicateLetters("ccbab"), 'cab');
+
+console.log(removeDuplicateLetters("thesqtitxyetpxloeevdeqifkz"), "hesitxyplovdqfkz");
+
+
+// console.log(removeDuplicateLetters("thesqtitxyet"), "hesitxyplovdqfkz");
 
 
