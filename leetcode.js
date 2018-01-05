@@ -501,8 +501,8 @@ var sss = 'cbcba';
 // console.log(removeDuplicateLetters("ccbab"), 'cab');
 
 console.log(removeDuplicateLetters("thesqtitxyetpxloeevdeqifkz"), "hesitxyplovdqfkz");
-
-
+console.log(removeDuplicateLetters("ttttttthesqtitxyetpxloeevdeqifkz"), "hesitxyplovdqfkz");
+//
 // console.log(removeDuplicateLetters("thesqtitxyet"), "hesitxyplovdqfkz");
 
 
