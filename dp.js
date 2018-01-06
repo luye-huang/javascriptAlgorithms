@@ -113,3 +113,41 @@ console.log(minPathSum([[1, 4, 8, 6, 2, 2, 1, 7], [4, 7, 3, 1, 4, 5, 5, 1], [8, 
 console.log(minPathSum([[1, 3, 1, 2], [1, 5, 1, 2], [4, 2, 1, 2]]));
 console.log(minPathSum([[1, 3, 1], [1, 5, 1], [4, 2, 1]]));
 console.log(minPathSum([[0]]));
+
+
+
+//416
+/**
+ * @param {number[]} nums
+ * @return {boolean}
+ */
+// 状态流转：F(n, c) = F(n-1,c) || F(n-1, c-v[i])
+var canPartition = function (nums) {
+    let sum = 0, sumLeft = 0, sumRight;
+    nums.forEach((v) => sum += v);
+    if (sum % 2) return false;
+    const amount = sum / 2;
+    const memo = new Array(amount + 1).fill(false);
+    nums.forEach((v, idx) => {
+        const memoCopy = [...memo];
+        for (let i = 1; i <= amount; i++) {
+            if (idx) {
+                if (i > v) {
+                    memo[i] = memoCopy[i] || memoCopy[i - v];
+                } else if (i == v) {
+                    memo[i] = true;
+                }
+            } else {
+                if (i == v) {
+                    memo[i] = true;
+                }
+            }
+        }
+    });
+    return memo[amount];
+};
+
+
+console.log(canPartition([1, 2, 3, 4, 5, 6, 7]));
+console.log(canPartition([1, 5, 11, 5]));
+console.log(canPartition([1, 2,5]));
