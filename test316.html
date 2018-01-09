@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<script>
+    var removeDuplicateLetters = function (s) {
+        let arr = Array.from(s), result = '';
+        const keys = [...new Set(arr)].sort((a, b) => a > b);
+        const stack = [...new Set(arr)].sort((a, b) => a > b);
+        let dict = storeInfo(arr);
+        let values = [...dict.values()];
+        while (stack.length > 0) {
+            const element = stack.shift();
+            const elementInfo = dict.get(element);
+            const positions = elementInfo.positions;
+            const keysToCompare = keys.slice(0, keys.indexOf(element));
+            elementInfo.positionCompare && keysToCompare.push(elementInfo.positionCompare);
+            elementInfo.positionCurrent = positions[positions.length - 1];
+            let stackAdd = true;
+            const boundary = elementInfo.positionTrack ? elementInfo.positionTrack : arr.length;
+            for (let [i, v] of positions.entries()) {
+                if (arr.slice(0, v).every((val, idx) =>!keysToCompare.includes(val) || val < element || dict.get(val).positionCurrent != idx) &&
+                        arr.slice(v + 1, boundary).every((val, idx)=>!keysToCompare.includes(val) || val > element || dict.get(val).positionCurrent != idx + v + 1) && v < boundary) {
+                    elementInfo.positionCurrent = v;
+                    stackAdd = false;
+                    break;
+                }
+            }
+            if (stackAdd) {
+                const keysToAdd = keysToCompare.reverse();
+                for (let v of keysToAdd) {
+                    const elementCompareInfo = dict.get(v);
+                    if (elementCompareInfo.fixed)continue;
+                    if (elementCompareInfo.positionCurrent > elementInfo.positionCurrent && arr.slice(0, elementInfo.positionCurrent).includes(elementCompareInfo.name)) {
+                        dict.get(v).positionTrack = elementInfo.positionCurrent;
+                        dict.get(v).positionCompare = elementInfo.name;
+                        stack.unshift(v);
+                    }
+                }
+            }
+            if (elementInfo.positionTrack) {
+                elementInfo.positionTrack = null;
+                elementInfo.positionCompare = null;
+            }
+        }
+        console.log(dict);
+        values.sort((a, b) => a.positionCurrent - b.positionCurrent);
+        values.forEach((v) => {
+            result += v.name;
+        });
+        return result;
+    };
+
+
+    function storeInfo(array) {
+        const dict = new Map();
+        array.forEach((v, i) => {
+            if (dict.has(v)) {
+                dict.get(v).fixed = false;
+                dict.get(v).positions.push(i);
+            } else {
+                dict.set(v, {name: v, positions: [i], fixed: true, positionCurrent: i});
+            }
+        });
+        return dict;
+    }
+
+    var ss = 'cbacdcbc';
+    var sss = 'cbcba';
+
+
+    console.log(removeDuplicateLetters("thesqtitxyetpxloeevdeqifkz"), "hesitxyplovdqfkz");
+</script>
+</body>
+</html>

@@ -499,10 +499,113 @@ var sss = 'cbcba';
 // console.log(removeDuplicateLetters("bbcab"), 'bca');
 // console.log(removeDuplicateLetters("cbcab"), 'bca');
 // console.log(removeDuplicateLetters("ccbab"), 'cab');
-
-console.log(removeDuplicateLetters("thesqtitxyetpxloeevdeqifkz"), "hesitxyplovdqfkz");
-console.log(removeDuplicateLetters("ttttttthesqtitxyetpxloeevdeqifkz"), "hesitxyplovdqfkz");
+//
+// console.log(removeDuplicateLetters("thesqtitxyetpxloeevdeqifkz"), "hesitxyplovdqfkz");
+// console.log(removeDuplicateLetters("ttttttthesqtitxyetpxloeevdeqifkz"), "hesitxyplovdqfkz");
 //
 // console.log(removeDuplicateLetters("thesqtitxyet"), "hesitxyplovdqfkz");
 
 
+// 349
+/**
+ * @param {number[]} nums1
+ * @param {number[]} nums2
+ * @return {number[]}
+ */
+// var intersection = function (nums1, nums2) {
+//     const res = [];
+//     nums1 = [... new Set(nums1)];
+//     nums2 = [... new Set(nums2)];
+//     if (nums1.length > nums2.length) {
+//         nums2.forEach((v) => {
+//             if (nums1.includes(v)) {
+//                 res.push(v);
+//             }
+//         });
+//     } else {
+//         nums1.forEach((v) => {
+//             if (nums2.includes(v)) {
+//                 res.push(v);
+//             }
+//         });
+//     }
+//     return res;
+// };
+
+
+// 187
+// var findRepeatedDnaSequences = function(s) {
+//     let indexBegin = 0;
+//     const ret = [], dict = {};
+//     while(indexBegin + 10 <= s.length){
+//         const segment = s.substr(indexBegin, 10);
+//         if(dict[segment]){
+//             dict[segment]++;
+//             if(dict[segment]==2){
+//                 ret.push(segment);
+//             }
+//         } else {
+//             dict[segment] = 1;
+//         }
+//         indexBegin++;
+//     }
+//     return ret;
+// };
+//
+// // console.log(findRepeatedDnaSequences("AAAAACCCCCAAAAACCCCCCAAAAAGGGTTT"));
+// console.log(findRepeatedDnaSequences("AAAAAAAAAAA"));
+
+// 435
+/**
+ * Definition for an interval.
+ * function Interval(start, end) {
+ *     this.start = start;
+ *     this.end = end;
+ * }
+ */
+/**
+ * @param {Interval[]} intervals
+ * @return {number}
+ */
+var eraseOverlapIntervals = function (intervals) {
+    const overlaps = new Array(intervals.length);
+    let count = 0, ret = 0;
+    for (let i = 0; i < intervals.length - 1; i++) {
+        for (let j = i + 1; j < intervals.length; j++) {
+            if (intervals[i][0] >= intervals[j][0] && intervals[i][0] < intervals[j][1]
+                || intervals[i][1] > intervals[j][0] && intervals[i][1] <= intervals[j][1]) {
+                if (overlaps[i]) {
+                    overlaps[i].relations.push(j);
+                } else {
+                    overlaps[i] = {};
+                    overlaps[i].name = i;
+                    overlaps[i].relations = [j];
+                }
+                if (overlaps[j]) {
+                    overlaps[j].relations.push(i);
+                } else {
+                    overlaps[j] = {};
+                    overlaps[j].name = j;
+                    overlaps[j].relations = [i];
+                }
+                count += 2;
+            }
+        }
+    }
+    overlaps.sort((a, b) =>a.relations && b.relations && ( b.relations.length - a.relations.length));
+    while (count > 0) {
+        const relation = overlaps.shift();
+        const name = relation.name;
+        count -= 2;
+        ret++;
+        relation.relations.forEach((v) => {
+            const linked = overlaps.find((el) => el.name == v);
+            linked.relations[linked.relations.indexOf(name)] = null;
+            linked.relations = linked.relations.filter(el=>el != null);
+        });
+    }
+    console.log(overlaps);
+    return ret;
+};
+
+console.log(eraseOverlapIntervals([[1,2],[1,2],[1,2]]));
