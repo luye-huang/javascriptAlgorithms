@@ -151,13 +151,49 @@
 // console.log(canPartition([1, 5, 11, 5]));
 // console.log(canPartition([1, 2,5]));
 
-// 474
+// 300
 /**
- * @param {string[]} strs
- * @param {number} m
- * @param {number} n
+ * @param {number[]} nums
  * @return {number}
  */
-var findMaxForm = function(strs, m, n) {
-
+// 假设memo[i]代表加入第i个数能构成的最长升序序列长度，我们就是要在memo[0]到memo[i-1]中找到一个最长的升序序列长度，又保证序列尾值nums[j]小于nums[i]
+var lengthOfLIS = function (nums) {
+    let ret = 0;
+    // nums.sort((a, b) => a - b);
+    const len = nums.length;
+    if (len == 1)return len;
+    const memo = new Array(len).fill(1);
+    for (let i = 1; i < len; i++) {
+        for (let j = i - 1; j >= 0; j--) {
+            if (nums[i] > nums[j] && memo[j] + 1 >= memo[i])memo[i] = memo[j] + 1;
+        }
+        ret = Math.max(ret, memo[i]);
+    }
+    return ret;
 };
+// console.log(lengthOfLIS([1, 3, 4, 2, 3]));
+// console.log(lengthOfLIS([2, 2]));
+
+// 368
+/**
+ * @param {number[]} nums
+ * @return {number[]}
+ */
+var largestDivisibleSubset = function (nums) {
+    const len = nums.length;
+    if (!len) return [];
+    nums.sort((a, b) =>a - b);
+    const comb = [];
+    nums.forEach(v => comb.push([v]));
+    for (let i = 1; i < len; i++) {
+        for (let j = i - 1; j >= 0; j--) {
+            if (nums[i] % nums[j] == 0 && comb[j].length + 1 >= comb[i].length) {
+                comb[i] = [...comb[j], nums[i]];
+            }
+        }
+    }
+    comb.sort((a, b)=>b.length - a.length);
+    return comb[0];
+};
+console.log(largestDivisibleSubset([1,2,4,8]));
+console.log(largestDivisibleSubset([4, 8, 10, 240]));

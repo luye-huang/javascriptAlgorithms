@@ -6,6 +6,7 @@
 </head>
 <body>
 <script>
+
     var removeDuplicateLetters = function (s) {
         let arr = Array.from(s), result = '';
         const keys = [...new Set(arr)].sort((a, b) => a > b);
