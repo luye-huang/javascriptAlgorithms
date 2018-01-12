@@ -162,7 +162,7 @@ var lengthOfLIS = function (nums) {
     // nums.sort((a, b) => a - b);
     const len = nums.length;
     if (len == 1)return len;
-    const memo = new Array(len).fill(1);
+    const memo = new Array(len).fill(1); //以第i个元素为结尾最长子序列的长度
     for (let i = 1; i < len; i++) {
         for (let j = i - 1; j >= 0; j--) {
             if (nums[i] > nums[j] && memo[j] + 1 >= memo[i])memo[i] = memo[j] + 1;
@@ -195,5 +195,10 @@ var largestDivisibleSubset = function (nums) {
     comb.sort((a, b)=>b.length - a.length);
     return comb[0];
 };
-console.log(largestDivisibleSubset([1,2,4,8]));
-console.log(largestDivisibleSubset([4, 8, 10, 240]));
+// console.log(largestDivisibleSubset([1, 2, 4, 8]));
+// console.log(largestDivisibleSubset([4, 8, 10, 240]));
+
+
+
+
+
