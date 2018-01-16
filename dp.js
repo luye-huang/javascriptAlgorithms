@@ -198,6 +198,76 @@ var largestDivisibleSubset = function (nums) {
 // console.log(largestDivisibleSubset([1, 2, 4, 8]));
 // console.log(largestDivisibleSubset([4, 8, 10, 240]));
 
+//474
+/**
+ * @param {string[]} strs
+ * @param {number} m
+ * @param {number} n
+ * @return {number}
+ */
+var findMaxForm = function (strs, m, n) {
+    const len = strs.length;
+    const dp = new Map();
+    const arr0 = new Array(len).fill(0);
+    const arr1 = new Array(len).fill(0);
+    strs.forEach((v, i) =>{
+        arr0[i] = getZeros(v);
+        arr1[i] = getOnes(v);
+    });
+    for (let i = 0; i <= m; i++) {
+        for (let j = 0; j <= n; j++) {
+            for (let k = 0; k < len; k++) {
+                if (i + j == 0) {
+                    dp.set(keyGen(i, j, k), 0);
+                    continue;
+                }
+                const ones = arr1[k];
+                const zeros = arr0[k];
+                const keyCur = keyGen(i, j, k);
+                let valTemp;
+                const valPre = k ? dp.get(keyGen(i, j, k - 1)) : 0;
+                if (i >= zeros && j >= ones) {
+                    valTemp = dp.get(keyGen(i - zeros, j - ones, k - 1));
+                    valTemp = valTemp ? valTemp : 0;
+                    valTemp = Math.max(valTemp + 1, valPre);
+                } else {
+                    valTemp = valPre;
+                }
+                dp.set(keyCur, valTemp);
+            }
+        }
+    }
+    return dp.get(keyGen(m, n, len - 1));
+};
+
+var getZeros = function (str) {
+    let ret = 0;
+    for (let i = 0; i < str.length; i++) {
+        if (str.charAt(i) == 0) {
+            ret++;
+        }
+    }
+    return ret;
+};
+var getOnes = function (str) {
+    let ret = 0;
+    for (let i = 0; i < str.length; i++) {
+        if (str.charAt(i) == 1) {
+            ret++;
+        }
+    }
+    return ret;
+};
+var keyGen = function (a, b, c) {
+    if (arguments.length == 2) {
+        return `${a}-${b}`;
+    }
+    return `${a}-${b}-${c}`;
+};
+// console.log(getOnes('11141'));
+console.log(findMaxForm(["10", "0001", "111001", "1", "0"], 5, 3));
+console.log(findMaxForm(["10", "0001", "111001", "1", "0"], 4, 3));
+console.log(findMaxForm(["0", "11", "1000", "01", "0", "101", "1", "1", "1", "0", "0", "0", "0", "1", "0", "0110101", "0", "11", "01", "00", "01111", "0011", "1", "1000", "0", "11101", "1", "0", "10", "0111"], 9, 80));
 
 
 
