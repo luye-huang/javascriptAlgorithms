@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<script>
+    /**
+     * 767
+     * @param {string} S
+     * @return {string}
+     */
+    var reorganizeString = function (S) {
+        const arr = Array.from(S);
+        const len = S.length;
+        const dict = new Map();
+        let max = 0, keyTemp = '';
+        for (let i = 0; i < len; i++) {
+            const key = arr[i];
+            let val = dict.get(key);
+            if (val) {
+                val++;
+                dict.set(key, val);
+                if (val > max) {
+                    max = val;
+                    keyTemp = key;
+                }
+            } else {
+                dict.set(key, 1);
+            }
+        }
+        if (max > Math.ceil(len / 2)) {
+            return '';
+        } else {
+            for (let i = 0; i < len && max > 0; i++) {
+                if (i % 2 == 0) {
+                    max--;
+                    if (arr[i] != keyTemp) {
+                        const idx = S.indexOf(keyTemp);
+                        if (idx > -1) {
+                            arr[idx] = arr[i];
+                            arr[i] = keyTemp;
+                        }
+                    }
+                } else {
+                    if (arr[i] == keyTemp) {
+                        const idx = arr.slice(i).findIndex((el)=>el != keyTemp);
+                        if (idx > -1) {
+                            arr[i] = arr[idx + i];
+                            arr[idx + i] = keyTemp;
+                        }
+                    }
+                }
+            }
+        }
+        let ret = '';
+        arr.forEach((el)=>ret += el);
+        return ret;
+    };
+    console.log(reorganizeString("bfrbs"));
+</script>
+</body>
+</html>
