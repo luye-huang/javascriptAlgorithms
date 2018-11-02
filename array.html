@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Array</title>
+</head>
+<body>
+<script>
+    //    48 rotate image
+    /**
+     * @param {number[][]} matrix
+     * @return {void} Do not return anything, modify matrix in-place instead.
+     */
+//    由外至内,找出一周四个点互相赋值,找出四个点坐标的关系比较费脑
+    var rotate = function (matrix) {
+        const len = matrix.length;
+        if (!len) {
+            return;
+        }
+        const lastIndex = len - 1;
+        console.log(matrix);
+        let temp1, temp2, temp3, temp4;
+        for (let i = 0; i < Math.ceil(lastIndex / 2); i++) {
+            for (let j = i; j < lastIndex - i; j++) {
+                temp1 = matrix[i][j], temp2 = matrix[j][lastIndex - i], temp3 = matrix[lastIndex - i][lastIndex - j], temp4 = matrix[lastIndex - j][i];
+                console.log(temp1, temp2, temp3, temp4);
+                matrix[i][j] = temp4;
+                matrix[j][lastIndex - i] = temp1;
+                matrix[lastIndex - i][lastIndex - j] = temp2;
+                matrix[lastIndex - j][i] = temp3;
+            }
+        }
+    };
+    console.log(rotate([
+        [5, 1, 9, 11],
+        [2, 4, 8, 10],
+        [13, 3, 6, 7],
+        [15, 14, 12, 16]
+    ]));
+</script>
+
+
+</body>
+</html>
