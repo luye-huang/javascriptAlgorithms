@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>DFS</title>
+</head>
+<body>
+<script>
+    /**
+     * @param {number[][]} matrix
+     * @return {number}
+     */
+    var longestIncreasingPath = function (matrix) {
+        if (!matrix.length) {
+            return 0;
+        }
+        const memo = [];
+        const m = matrix.length, n = matrix[0].length;
+        let res = 0;
+        matrix.forEach(el => {
+            memo.push(new Array(n));
+        });
+        for (let i = 0; i < m; i++) {
+            for (let j = 0; j < n; j++) {
+                res = Math.max(res, dfs(matrix, memo, matrix[i][j], i, j, m, n, 0));
+            }
+        }
+        return res;
+    };
+
+    var dfs = function (matrix, memo, val, i, j, m, n, round) {
+        if (i < 0 || i >= m || j < 0 || j >= n) {
+            return 0;
+        }
+        if (val < matrix[i][j]) {
+            return 0;
+        }
+        if (val == matrix[i][j] && round) {
+            return 0;
+        }
+        if (memo[i][j]) {
+            return memo[i][j];
+        }
+        const a = dfs(matrix, memo, matrix[i][j], i - 1, j, m, n, round + 1) + 1;
+        const b = dfs(matrix, memo, matrix[i][j], i + 1, j, m, n, round + 1) + 1;
+        const c = dfs(matrix, memo, matrix[i][j], i, j - 1, m, n, round + 1) + 1;
+        const d = dfs(matrix, memo, matrix[i][j], i, j + 1, m, n, round + 1) + 1;
+        const res = Math.max.apply(null, [a, b, c, d]);
+        memo[i][j] = res;
+        return res;
+    };
+
+        console.log(longestIncreasingPath(
+                [
+                    [9,9,4],
+                    [6,6,8],
+                    [2,1,1]
+                ]
+        ));
+
+        console.log(longestIncreasingPath(
+                [
+                    [3,4,5],
+                    [3,2,6],
+                    [2,2,1]
+                ]
+        ));
+    console.log(longestIncreasingPath(
+            [
+                [7, 8, 9],
+                [9, 7, 6],
+                [7, 2, 3]]
+    ));
+
+</script>
+</body>
+</html>
