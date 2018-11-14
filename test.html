@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<script>
+    "use strict";
+    function cc(x) {
+//        console.log(12);
+        x++;
+        if (x > 10) return x;
+        return cc(x);
+    }
+    console.log(cc(1));
+</script>
+</body>
+</html>

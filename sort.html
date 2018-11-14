@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Sort</title>
+</head>
+<body>
+<script>
+    //    75 三路快排
+    //    /**
+    //     * @param {number[]} nums
+    //     * @return {void} Do not return anything, modify nums in-place instead.
+    //     */
+    var sortColors = function (nums) {
+        if (nums.length < 2) {
+            return nums;
+        }
+        const val = nums[0];
+        let lt = 0, gt = nums.length - 1, i = lt + 1;
+        while (lt < gt && i <= gt) {
+            if (nums[i] < val) {
+                [nums[i], nums[lt + 1]] = [nums[lt + 1], nums[i]];
+                i++;
+                lt++;
+            } else if (nums[i] == val) {
+                i++;
+            } else {
+                [nums[i], nums[gt]] = [nums[gt], nums[i]];
+                gt--;
+            }
+        }
+        [nums[lt], nums[0]] = [nums[0], nums[lt]];
+        return [...sortColors(nums.slice(0, lt)), ...nums.slice(lt, gt), ...sortColors(nums.slice(gt))];
+    };
+    function quickSort(arr) {
+        const val = arr[0];
+        let lt = 0, gt = arr.length - 1, i = lt + 1;
+        while (lt < gt && i < arr.length - 1) {
+            if (arr[i] < val) {
+                [arr[i], arr[lt + 1]] = [arr[lt + 1], arr[i]];
+                i++;
+                lt++;
+            } else if (arr[i] == val) {
+                i++;
+            } else {
+                [arr[i], arr[gt]] = [arr[gt], arr[i]];
+                gt--;
+            }
+        }
+        [arr[i], arr[0]] = [arr[0], arr[i]];
+        return arr;
+    }
+    console.log(sortColors([2, 0, 2, 1, 1, 0]));
+</script>
+
+</body>
+</html>
