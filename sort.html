@@ -12,48 +12,59 @@
     //     * @return {void} Do not return anything, modify nums in-place instead.
     //     */
     var sortColors = function (nums) {
-        if (nums.length < 2) {
-            return nums;
-        }
-        const val = nums[0];
-        let lt = 0, gt = nums.length - 1, i = lt + 1;
-        while (lt < gt && i <= gt) {
-            if (nums[i] < val) {
-                [nums[i], nums[lt + 1]] = [nums[lt + 1], nums[i]];
-                i++;
-                lt++;
-            } else if (nums[i] == val) {
-                i++;
+        const len = nums.length;
+        if (len < 2)return;
+        let zero = -1, two = 0, index = 0;
+        while (index < len - two) {
+            if (!nums[index]) {
+                nums[index] = nums[zero + 1];
+                nums[zero + 1] = 0;
+                index++;
+                zero++;
+            } else if (nums[index] == 1) {
+                index++;
             } else {
-                [nums[i], nums[gt]] = [nums[gt], nums[i]];
-                gt--;
+                nums[index] = nums[len - 1 - two];
+                nums[len - 1 - two] = 2;
+                two++;
             }
         }
-        [nums[lt], nums[0]] = [nums[0], nums[lt]];
-        return [...sortColors(nums.slice(0, lt)), ...nums.slice(lt, gt), ...sortColors(nums.slice(gt))];
+
     };
-    function quickSort(arr) {
-        const val = arr[0];
-        let lt = 0, gt = arr.length - 1, i = lt + 1;
-        while (lt < gt && i < arr.length - 1) {
+
+    //三路快排
+    function quickSort3(arr, lt, gt) {
+        if (lt >= gt || lt < 0 || gt > arr.length - 1) {
+            return;
+        }
+        let l = lt, r = gt + 1, i = l + 1;
+        const val = arr[l];
+        while (l < r && i < r) {
             if (arr[i] < val) {
-                [arr[i], arr[lt + 1]] = [arr[lt + 1], arr[i]];
+                [arr[i], arr[l + 1]] = [arr[l + 1], arr[i]];
                 i++;
-                lt++;
+                l++;
             } else if (arr[i] == val) {
                 i++;
             } else {
-                [arr[i], arr[gt]] = [arr[gt], arr[i]];
-                gt--;
+                r--;
+                [arr[i], arr[r]] = [arr[r], arr[i]];
             }
         }
-        [arr[i], arr[0]] = [arr[0], arr[i]];
-        return arr;
+        [arr[l], arr[0]] = [arr[0], arr[l]];
+        quickSort(arr, lt, l - 1);
+        quickSort(arr, r, gt);
     }
-    console.log(sortColors([2, 0, 2, 1, 1, 0]));
+    let arr = [2, 0, 2, 1, 1, 0];
+//    arr = [2, 0, 1];
+    //    swap(arr);
+    sortColors(arr);
+    console.log(arr);
+    function swap(arr) {
+        arr[0] = arr[1];
+    }
 
-
-//    215 用快排解决更优化 每次partition后与分割点比较 可以缩减范围
+    //    215 用快排解决更优化 每次partition后与分割点比较 可以缩减范围
 </script>
 
 </body>
