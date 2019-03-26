@@ -114,6 +114,47 @@
 // console.log(minPathSum([[1, 3, 1], [1, 5, 1], [4, 2, 1]]));
 // console.log(minPathSum([[0]]));
 
+// 1 5 1 1 : 1 2 2 4
+// 1 2 1 1 : 1 2 3 4
+/**
+ * 91 decode ways
+ * 每个数都要用上 '02' 无效
+ * 状态流转: if(isValid(arr[i])&&isValid(arr[i-1]+arr[i])) f(x)=f(x-1)+f(x-2) else f(x)=f(x-1)
+ * @param {string} s
+ * @return {number}
+ */
+var numDecodings = function (s) {
+    if (s.charAt(0) === '0' || s.includes('00'))return 0;
+    const len = s.length;
+    if (len < 2)return len;
+    const arr = s.split('');
+    const dp = [1];
+    for (let i = 1; i < len; i++) {
+        let num;
+        const former = dp[i - 2] ? dp[i - 2] : 1;
+        const comb = arr[i - 1] + arr[i];
+        if (isValid(arr[i])) {
+            if (isValid(comb) && arr[i - 1] != '0') {
+                num = dp[i - 1] + former;
+            } else {
+                num = dp[i - 1];
+            }
+        } else {
+            if (arr[i - 1] < 3) {
+                num = i > 1 ? former : 1;
+            } else {
+                return 0;
+            }
+        }
+        dp.push(num);
+    }
+    return dp.pop();
+};
+
+function isValid(num) {
+    return num >= 1 && num <= 26;
+}
+
 
 //416
 /**
