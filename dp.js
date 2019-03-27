@@ -358,7 +358,10 @@ var keyGen = function (a, b, c) {
  * 516
  * @param {string} s
  * @return {number}
+ * 状态转移: if(charAt[i]==s.charAt[j]) f(i,j) = f(i+1, j-1)+2 else f(i,j)= Math.max(f(i+1,j), f(i,j-1))
+ *
  */
+//优化前
 var longestPalindromeSubseq = function (s) {
     const len = s.length, dp = new Map();
     if(len < 2){
@@ -387,10 +390,45 @@ function getDp(dp, left, right) {
         return dp.get(left + '-' + right);
     }
 }
-console.log(longestPalindromeSubseq('a'));
-console.log(longestPalindromeSubseq('bzb'));
-console.log(longestPalindromeSubseq('bb'));
 
+//空间压缩 优化后; leetcode 与本地chrome跑结果不一致
+var longestPalindromeSubseq = function (s) {
+    const len = s.length;
+    let dp = [];
+    if (len < 2) {
+        return len;
+    }
+    for (let i = 1; i < len; i++) {
+        const temp = [];
+        for (let j = i - 1; j >= 0; j--) {
+            let val = 0;
+            if (s.charAt(j) == s.charAt(i)) {
+                val = getDp(dp, j + 1, i - 1) + 2;
+            } else {
+                val = Math.max(getDp(dp, j, i - 1), getDp(temp, j + 1, i));
+            }
+            temp[j] = val;
+            // if(j == i - 1){
+            //     dp[j] = val;
+            // }
+        }
+        dp = [...temp];
+    }
+    return dp[0];
+};
+
+function getDp(dp, left, right) {
+    if (right - left == 0) {
+        return 1;
+    } else if (right - left < 0) {
+        return 0;
+    } else {
+        return dp[left];
+    }
+}
+// console.log(longestPalindromeSubseq("aabaaba"));
+// console.log(longestPalindromeSubseq('bzb'));
+// console.log(longestPalindromeSubseq('bb'));
 console.log(longestPalindromeSubseq('bbbab'));
 
 
