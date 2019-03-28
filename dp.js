@@ -155,43 +155,42 @@ function isValid(num) {
     return num >= 1 && num <= 26;
 }
 
-
-//416
-/**
- * @param {number[]} nums
- * @return {boolean}
+/** 176
+ * 由右下角向左上角逐渐向上
+ * @param {number[][]} dungeon
+ * @return {number}
  */
-// 状态流转：F(n, c) = F(n-1,c) || F(n-1, c-v[i])
-// var canPartition = function (nums) {
-//     let sum = 0;
-//     nums.forEach((v) => sum += v);
-//     if (sum % 2) return false;
-//     const amount = sum / 2;
-//     const memo = new Array(amount + 1).fill(false);
-//     nums.forEach((v, idx) => {
-//         const memoCopy = [...memo];
-//         for (let i = 1; i <= amount; i++) {
-//             if (idx) {
-//                 if (i > v) {
-//                     memo[i] = memoCopy[i] || memoCopy[i - v];
-//                 } else if (i == v) {
-//                     memo[i] = true;
-//                 }
-//             } else {
-//                 if (i == v) {
-//                     memo[i] = true;
-//                 }
-//             }
-//         }
-//     });
-//     return memo[amount];
-// };
-//
-//
-// console.log(canPartition([1, 2, 3, 4, 5, 6, 7]));
-// console.log(canPartition([1, 5, 11, 5]));
-// console.log(canPartition([1, 2,5]));
+var calculateMinimumHP = function (dungeon) {
+    let w = dungeon[0].length, h = dungeon.length;
+    const dp = new Array();
+    for (let i = 0; i < h + 1; i++) {
+        dp[i] = [];
+    }
+    for (let i = h - 1; i >= 0; i--) {
+        for (let j = w - 1; j >= 0; j--) {
+            const stored = getValidDp(dp[i][j + 1], dp[i + 1][j]);
+            if (dungeon[i][j] >= stored) {
+                dp[i][j] = 1;
+            } else {
+                dp[i][j] = stored - dungeon[i][j];
+            }
+        }
+    }
+    return dp[0][0];
+};
+function getValidDp(num1, num2) {
+    if (num1 == undefined && num2 == undefined) {
+        return 1;
+    } else if (num1 == undefined) {
+        return num2;
+    } else if (num2 == undefined) {
+        return num1;
+    } else {
+        return Math.min(num1, num2);
+    }
+}
 
+// console.log(calculateMinimumHP([[-2, -3, 3], [-5, -10, 1], [10, 30, -5]]));
 // 300
 /**
  * @param {number[]} nums
@@ -303,6 +302,43 @@ var wiggleMaxLength = function (nums) {
         }
         return result;
     };
+
+
+//416
+/**
+ * @param {number[]} nums
+ * @return {boolean}
+ */
+// 状态流转：F(n, c) = F(n-1,c) || F(n-1, c-v[i])
+var canPartition = function (nums) {
+    let sum = 0;
+    nums.forEach((v) => sum += v);
+    if (sum % 2) return false;
+    const amount = sum / 2;
+    const memo = new Array(amount + 1).fill(false);
+    nums.forEach((v, idx) => {
+        const memoCopy = [...memo];
+        for (let i = 1; i <= amount; i++) {
+            if (idx) {
+                if (i > v) {
+                    memo[i] = memoCopy[i] || memoCopy[i - v];
+                } else if (i == v) {
+                    memo[i] = true;
+                }
+            } else {
+                if (i == v) {
+                    memo[i] = true;
+                }
+            }
+        }
+    });
+    return memo[amount];
+};
+//
+//
+// console.log(canPartition([1, 2, 3, 4, 5, 6, 7]));
+// console.log(canPartition([1, 5, 11, 5]));
+// console.log(canPartition([1, 2,5]));
 
 //474
 /**

@@ -30,6 +30,6 @@ var asteroidCollision = function (asteroids) {
     return res;
 };
 
-console.log(asteroidCollision([1,-2,-2,-2]));
-console.log(asteroidCollision([-2,-1,1,2]));
-console.log(asteroidCollision([5,10,-5]));
+// console.log(asteroidCollision([1,-2,-2,-2]));
+// console.log(asteroidCollision([-2,-1,1,2]));
+// console.log(asteroidCollision([5,10,-5]));
