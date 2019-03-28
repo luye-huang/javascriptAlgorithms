@@ -215,6 +215,34 @@ var lengthOfLIS = function (nums) {
 // console.log(lengthOfLIS([1, 3, 4, 2, 3]));
 // console.log(lengthOfLIS([2, 2]));
 
+
+/** 309
+ * 状态流转:if 卖: max( 前面任何可以买入一点买入的差价+ 前面可卖出点的dp值) else dp[i-1]
+ * @param {number[]} prices
+ * @return {number}
+ */
+var maxProfit = function (prices) {
+    const len = prices.length;
+    if (!len) {
+        return 0;
+    }
+    const dp = [0];
+    // 在i点卖
+    for (let i = 1; i < len; i++) {
+        // 在j点买
+        let max = -Infinity;
+        for (let j = 0; j < i; j++) {
+            let temp = prices[i] - prices[j];
+            if (j > 2)temp += dp[j - 2];
+            if (temp > max)max = temp;
+        }
+        dp.push(Math.max(max, dp[i - 1]));
+    }
+    return Math.max.apply(null, dp);
+};
+
+// console.log(maxProfit([1, 2, 4]));
+
 // 368
 /**
  * @param {number[]} nums
@@ -364,7 +392,7 @@ var keyGen = function (a, b, c) {
 //优化前
 var longestPalindromeSubseq = function (s) {
     const len = s.length, dp = new Map();
-    if(len < 2){
+    if (len < 2) {
         return len;
     }
     for (let i = 1; i < len; i++) {
@@ -384,7 +412,7 @@ var longestPalindromeSubseq = function (s) {
 function getDp(dp, left, right) {
     if (right - left == 0) {
         return 1;
-    } else if(right - left < 0){
+    } else if (right - left < 0) {
         return 0;
     } else {
         return dp.get(left + '-' + right);
@@ -429,7 +457,6 @@ function getDp(dp, left, right) {
 // console.log(longestPalindromeSubseq("aabaaba"));
 // console.log(longestPalindromeSubseq('bzb'));
 // console.log(longestPalindromeSubseq('bb'));
-console.log(longestPalindromeSubseq('bbbab'));
 
 
 
