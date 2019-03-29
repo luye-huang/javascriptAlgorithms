@@ -418,6 +418,57 @@ var keyGen = function (a, b, c) {
 //     50));
 
 
+/** 514
+ * @param {string} ring
+ * @param {string} key
+ * @return {number}
+ * 状态:一个集合--所有的当前字母的旋转数,每一个值为计算前一个集合的所有的最小值
+ */
+var findRotateSteps = function (ring, key) {
+    //储存每个字母对应的位置
+    const pos = new Map(), cache = new Map(), len = ring.length;
+    for (let i = 0; i < len; i++) {
+        const key = ring.charAt(i);
+        const arr = pos.get(key);
+        if (arr) {
+            arr.push(i);
+        } else {
+            pos.set(key, [i]);
+        }
+    }
+    for (let i = 0; i < key.length; i++) {
+        const des = pos.get(key.charAt(i));
+        const cached = [];
+        des.forEach(d=> {
+            let temp = Infinity;
+            if (cache.size) {
+                for (let [key, value] of cache.entries()) {
+                    //计算最短间距
+                    const min = Math.min(d, key), max = Math.max(d, key);
+                    const offset = Math.min(max - min, min + len - max);
+                    if (value + offset < temp) {
+                        temp = value + offset;
+                    }
+                }
+            } else {
+                const offset = Math.min(d, len - d);
+                if (offset < temp) {
+                    temp = offset;
+                }
+            }
+            cached.push({key: d, value: temp});
+        });
+        cache.clear();
+        cached.forEach(c=> {
+            cache.set(c.key, c.value);
+        });
+    }
+    return Math.min.apply(null, Array.from(cache.values())) + key.length;
+};
+
+console.log(findRotateSteps("godding","gd"));
+console.log(findRotateSteps("edcba", "abcde"));
+
 /**
  * 516
  * @param {string} s
