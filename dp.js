@@ -155,7 +155,7 @@ function isValid(num) {
     return num >= 1 && num <= 26;
 }
 
-/** 176
+/** 174 dungeon game
  * 由右下角向左上角逐渐向上
  * @param {number[][]} dungeon
  * @return {number}
