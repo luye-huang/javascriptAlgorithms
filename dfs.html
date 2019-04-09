@@ -6,7 +6,51 @@
 </head>
 <body>
 <script>
-    /**
+    /** 200
+     * @param {character[][]} grid
+     * @return {number}
+     */
+    var numIslands = function (grid) {
+        let ret = 0;
+        const h = grid.length;
+        if (!h) return 0;
+        const w = grid[0].length, visited = [...new Array(h)].map(() => new Array(w).fill(false));
+        for (let i = 0; i < h; i++) {
+            for (let j = 0; j < w; j++) {
+                if (!visited[i][j]) {
+                    exploreVicinity(i, j, grid, visited);
+                    if (grid[i][j] == '1') {
+                        ret++;
+                    }
+                }
+            }
+        }
+        return ret;
+    };
+    var exploreVicinity = function (x, y, grid, visited) {
+        if (visited[x][y]) {
+            return;
+        }
+        visited[x][y] = true;
+        if (grid[x][y] == '1') {
+            if (x > 0) {
+                exploreVicinity(x - 1, y, grid, visited);
+            }
+            if (x < grid.length - 1) {
+                exploreVicinity(x + 1, y, grid, visited);
+            }
+            if (y > 0) {
+                exploreVicinity(x, y - 1, grid, visited);
+            }
+            if (y < grid[0].length - 1) {
+                exploreVicinity(x, y + 1, grid, visited);
+            }
+        }
+    }
+
+//    console.log(numIslands([["1", "1", "1", "1", "0"], ["1", "1", "0", "1", "0"], ["1", "1", "0", "0", "0"], ["0", "0", "0", "0", "0"]]));
+//    console.log(numIslands([["1", "1", "1"], ["0", "1", "0"], ["1", "1", "1"]]));
+    /**329
      * @param {number[][]} matrix
      * @return {number}
      */
@@ -50,27 +94,27 @@
         return res;
     };
 
-        console.log(longestIncreasingPath(
-                [
-                    [9,9,4],
-                    [6,6,8],
-                    [2,1,1]
-                ]
-        ));
-
-        console.log(longestIncreasingPath(
-                [
-                    [3,4,5],
-                    [3,2,6],
-                    [2,2,1]
-                ]
-        ));
-    console.log(longestIncreasingPath(
-            [
-                [7, 8, 9],
-                [9, 7, 6],
-                [7, 2, 3]]
-    ));
+    //    console.log(longestIncreasingPath(
+    //            [
+    //                [9, 9, 4],
+    //                [6, 6, 8],
+    //                [2, 1, 1]
+    //            ]
+    //    ));
+    //
+    //    console.log(longestIncreasingPath(
+    //            [
+    //                [3, 4, 5],
+    //                [3, 2, 6],
+    //                [2, 2, 1]
+    //            ]
+    //    ));
+    //    console.log(longestIncreasingPath(
+    //            [
+    //                [7, 8, 9],
+    //                [9, 7, 6],
+    //                [7, 2, 3]]
+    //    ));
 
 </script>
 </body>
