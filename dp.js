@@ -114,6 +114,72 @@
 // console.log(minPathSum([[1, 3, 1], [1, 5, 1], [4, 2, 1]]));
 // console.log(minPathSum([[0]]));
 
+
+/** 72
+ * @param {string} word1
+ * @param {string} word2
+ * @return {number}
+ */
+var minDistance = function (word1, word2) {
+    const len1 = word1.length, len2 = word2.length, pos = {}, visited = {};
+    if (!len1 || !len2) {
+        return Math.max(len1, len2);
+    }
+    //创建二维数组dp
+    const cache = [...new Array(len2)].map(() => new Array(len1).fill(0));
+    //统计每一个word1中字符出现在Word2中的index
+    for (let i = 0; i < len1; i++) {
+        for (let j = 0; !visited[word1.charAt(i)] && j < len2; j++) {
+            if (word2.charAt(j) == word1.charAt(i)) {
+                if (pos[word1.charAt(i)]) {
+                    pos[word1.charAt(i)].push(j);
+                } else {
+                    pos[word1.charAt(i)] = [j]
+                }
+            }
+        }
+        visited[word1.charAt(i)] = true;
+    }
+
+    for (let i = 0; i < len2; i++) {
+        for (let j = 0; j < len1; j++) {
+            let equalIndex = -1, positions = pos[word1.charAt(j)];
+            if (positions) {
+                positions = positions.filter(a=>a <= i);
+                if (positions.length) {
+                    equalIndex = positions[positions.length - 1];
+                }
+            }
+            // word1中循环到的char是插入还是与最后一位互换的最小值
+            cache[i][j] = Math.min(getCacheValue(i - 1, j - 1, cache), getCacheValue(i, j - 1, cache)) + 1;
+            if (equalIndex >= 0) {
+                //如果该char出现在word2中,本状态值为循环到的word2中最后一位的状态值加上与word2余下位数与上一次计算的最小值
+                cache[i][j] = Math.min(cache[i][j], getCacheValue(equalIndex - 1, j - 1, cache) + i - equalIndex);
+            }
+        }
+        // console.log(cache, i);
+    }
+    console.log(cache);
+    return getCacheValue(len2 - 1, len1 - 1, cache);
+};
+function getCacheValue(h, w, cache) {
+    if (h < 0 && w < 0) {
+        return 0;
+    } else if (h < 0) {
+        return w + 1;
+    } else if (w < 0) {
+        return h + 1;
+    } else {
+        return cache[h][w];
+    }
+}
+// console.log(minDistance("intention", "execution"), 5);
+// console.log(minDistance("horse", "ros"), 3);
+// console.log(minDistance("sea", "ate"), 3);
+// console.log(minDistance("sea", "eat"), 2);
+// console.log(minDistance("mart", "karma"), 3);
+
+
 // 1 5 1 1 : 1 2 2 4
 // 1 2 1 1 : 1 2 3 4
 /**
@@ -555,13 +621,13 @@ var findLength = function (A, B) {
             if (length < lenB) {
                 if (contains[i + '-' + j + '-' + length]) {
                     cache[j] = cache[j - 1] + 1;
-                } else if((',' + A.slice(0, i + 1) + ',').includes(',' + B.slice(j - length, j + 1) + ',')) {
+                } else if ((',' + A.slice(0, i + 1) + ',').includes(',' + B.slice(j - length, j + 1) + ',')) {
                     cache[j] = cache[j - 1] + 1;
                     for (let k = i; k < lenA; k++) {
-                        contains[k + '-' + j+ '-' + length] = true;
+                        contains[k + '-' + j + '-' + length] = true;
                     }
                     for (let k = length; k >= 0; k--) {
-                        contains[i + '-' + j+ '-' + k] = true;
+                        contains[i + '-' + j + '-' + k] = true;
                     }
                 } else {
                     cache[j] = cache[j - 1];
@@ -573,10 +639,10 @@ var findLength = function (A, B) {
     }
     return cache[(lenB - 1)];
 };
-console.log(findLength([0, 0, 0, 0, 1], [1, 0, 0, 0, 0]));
-console.log(findLength([1, 2, 3, 2, 1], [3, 2, 1, 4, 7]));
-console.log(findLength([70, 39, 25, 40, 7]
-    , [52, 20, 67, 5, 31]));
+// console.log(findLength([0, 0, 0, 0, 1], [1, 0, 0, 0, 0]));
+// console.log(findLength([1, 2, 3, 2, 1], [3, 2, 1, 4, 7]));
+// console.log(findLength([70, 39, 25, 40, 7]
+//     , [52, 20, 67, 5, 31]));
 
 
 

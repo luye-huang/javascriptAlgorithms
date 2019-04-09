@@ -2,7 +2,8 @@
  * Created by luye on 28/03/2019.
  */
 
-/**
+/**316
+ * 用一个栈存放结果,如果栈内元素比当前元素大且后面还有该栈内元素则出栈
  * @param {string} s
  * @return {string}
  */
@@ -62,8 +63,8 @@ class Stack{
     }
 }
 
-console.log(removeDuplicateLetters("bcabc"));
-console.log(removeDuplicateLetters("cbacdcbc"));
+// console.log(removeDuplicateLetters("bcabc"));
+// console.log(removeDuplicateLetters("cbacdcbc"));
 
 /**
  * 735
