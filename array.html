@@ -31,12 +31,12 @@
             }
         }
     };
-//    console.log(rotate([
-//        [5, 1, 9, 11],
-//        [2, 4, 8, 10],
-//        [13, 3, 6, 7],
-//        [15, 14, 12, 16]
-//    ]));
+    //    console.log(rotate([
+    //        [5, 1, 9, 11],
+    //        [2, 4, 8, 10],
+    //        [13, 3, 6, 7],
+    //        [15, 14, 12, 16]
+    //    ]));
 
     /**
      * 718
@@ -44,9 +44,51 @@
      * @param {number[]} B
      * @return {number}
      */
-    var findLength = function(A, B) {
+    var findLength = function (A, B) {
 
     };
+
+    /** 845
+     * @param {number[]} A
+     * @return {number}
+     */
+    var longestMountain = function (A) {
+        let up = false, down = false, ret = 0, count = 1;
+        const len = A.length;
+        if (len < 3) {
+            return 0;
+        }
+        for (let i = 1; i < len; i++) {
+            if (A[i] > A[i - 1]) {
+                up = true;
+                if (down) {
+                    ret = Math.max(ret, count);
+                    count = 2;
+                    down = false;
+                } else {
+                    count++;
+                }
+            } else if (A[i] < A[i - 1]) {
+                if (up) {
+                    down = true;
+                    count++;
+                }
+            } else {
+                ret = Math.max(ret, count);
+                count = 1;
+                down = false;
+                up = false;
+            }
+        }
+        if (up && down) {
+            ret = Math.max(ret, count);
+        }
+        return ret < 3 ? 0 : ret;
+    };
+
+    console.log(longestMountain([875,884,239,731,723,685]));
+    console.log(longestMountain([0, 1, 2, 3, 4, 5, 4, 3, 2, 1, 0]));
+        console.log(longestMountain([2, 1, 4, 7, 3, 2, 5]));
 
 </script>
 
