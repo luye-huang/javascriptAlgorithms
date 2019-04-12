@@ -221,6 +221,73 @@ function isValid(num) {
     return num >= 1 && num <= 26;
 }
 
+/**97
+ * @param {string} s1
+ * @param {string} s2
+ * @param {string} s3
+ * @return {boolean}
+ */
+var isInterleave = function(s1, s2, s3) {
+    let i1 = 0, i2 = 0, i3 = 0;
+    //此操作费效率,导致tle
+    if (arguments[3] != undefined) {
+        [i1, i2, i3] = [...arguments].slice(3);
+    }
+    const char1 = s1.charAt(i1), char2 = s2.charAt(i2), char3 = s3.charAt(i3);
+    if (!char3) {
+        return i1 >= s1.length && i2 >= s2.length;
+    }
+    if (!char1) {
+        return s3.substr(i3) == s2.substr(i2);
+    }
+    if (!char2) {
+        return s3.substr(i3) == s1.substr(i1);
+    }
+    if (char3 !== char1 && char3 !== char2) {
+        return false;
+    } else if (char3 == char1 && char3 == char2) {
+        return isInterleave(s1, s2, s3, i1, i2 + 1, i3 + 1) || isInterleave(s1, s2, s3, i1 + 1, i2, i3 + 1);
+    } else if (char3 == char1 && char3 !== char2) {
+        return isInterleave(s1, s2, s3, i1 + 1, i2, i3 + 1);
+    } else if (char3 !== char1 && char3 == char2) {
+        return isInterleave(s1, s2, s3, i1, i2 + 1, i3 + 1);
+    }
+};
+//去arguments后,通过
+var isInterleave = function (s1, s2, s3) {
+    return search(s1, s2, s3 , 0, 0, 0);
+}
+
+var search = function (s1, s2, s3, i1, i2, i3) {
+    //如果不存这三个变量,由超过30%变成10%,效率损耗比使用arguments小
+    const char1 = s1.charAt(i1), char2 = s2.charAt(i2), char3 = s3.charAt(i3);
+    if (!char3) {
+        return i1 >= s1.length && i2 >= s2.length;
+    }
+    if (!char1) {
+        return s3.substr(i3) == s2.substr(i2);
+    }
+    if (!char2) {
+        return s3.substr(i3) == s1.substr(i1);
+    }
+    if (char3 !== char1 && char3 !== char2) {
+        return false;
+    } else if (char3 == char1 && char3 == char2) {
+        return search(s1, s2, s3, i1, i2 + 1, i3 + 1) || search(s1, s2, s3, i1 + 1, i2, i3 + 1);
+    } else if (char3 == char1 && char3 !== char2) {
+        return search(s1, s2, s3, i1 + 1, i2, i3 + 1);
+    } else if (char3 !== char1 && char3 == char2) {
+        return search(s1, s2, s3, i1, i2 + 1, i3 + 1);
+    }
+}
+//    console.log(isInterleave("aabcc", "dbbca", "aadbbcbcac"));
+//    console.log(isInterleave("aabcc", "dbbca", "aadbbbaccc"));
+//    console.log(isInterleave("", "dbbca", "aadbbbaccc"));
+//    console.log(isInterleave("aabcc", "", "aadbbbaccc"));
+//    console.log(isInterleave("aabcc", "dbbca", ""));
+//    console.log(isInterleave("aaa", "bbb", "aaabbb"));
+
+
 /** 174 dungeon game
  * 由右下角向左上角逐渐向上
  * @param {number[][]} dungeon
