@@ -2,22 +2,79 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Algorithm</title>
-
-
-
+    <title>测试</title>
+    <!--<script src="dp.js"></script>-->
+    <!--<script src="stack.js"></script>-->
+    <script src="tree.js"></script>
 </head>
 <body>
-<!--<script src="twoPointer.js"></script>-->
-<!--<script src="search.js"></script>-->
-<!--<script src="backtrack.js"></script>-->
-<script src="dp.js"></script>
-<!--<script src="heap.js"></script>-->
-<!--<script src="heapIndex.js"></script>-->
-<!--<script src="sort.js"></script>-->
-<!--<script src="binaryTree.js"></script>-->
-<!--<script src="entry.js"></script>-->
-<!--<script src="tree.js"></script>-->
-<!--<script src="leetcode.js"></script>-->
+<script>
+    //1031
+//    var numEnclaves = function (A) {
+//        const start = [], lands = [], h = A.length, w = A[0].length, walked = {};
+//        for (let i = 0; i < h; i++) {
+//            for (let j = 0; j < w; j++) {
+//                if (A[i][j]) {
+//                    lands.push({x: i, y: j});
+//                    if (i == 0 || i == h - 1 || j == 0 || j == w - 1) {
+//                        start.push({x: i, y: j});
+//                    }
+//                }
+//            }
+//        }
+//        const starts = start.length;
+//        while (start.length) {
+//            const startPoint = start.pop();
+//            let x = startPoint.x - 1, y = startPoint.y;
+//            if (A[x] && A[x][y] && !walked[x + '-' + y] && x > 0 && x < w - 1 && y > 0 && y < h - 1) {
+//                start.push({x: x, y: y});
+//                walked[x + '-' + y] = true;
+//                for (let i = 0; i < lands.length; i++) {
+//                    if (lands[i].x == x && lands[i].y == y) {
+//                        lands.splice(i, 1);
+//                        break;
+//                    }
+//                }
+//            }
+//            x = startPoint.x + 1, y = startPoint.y;
+//            if (A[x] && A[x][y] && !walked[x + '-' + y] && x > 0 && x < w - 1 && y > 0 && y < h - 1) {
+//                start.push({x: x, y: y});
+//                walked[x + '-' + y] = true;
+//                for (let i = 0; i < lands.length; i++) {
+//                    if (lands[i].x == x && lands[i].y == y) {
+//                        lands.splice(i, 1);
+//                        break;
+//                    }
+//                }
+//            }
+//            x = startPoint.x, y = startPoint.y - 1;
+//            if (A[x] && A[x][y] && !walked[x + '-' + y] && x > 0 && x < w - 1 && y > 0 && y < h - 1) {
+//                start.push({x: x, y: y});
+//                walked[x + '-' + y] = true;
+//                for (let i = 0; i < lands.length; i++) {
+//                    if (lands[i].x == x && lands[i].y == y) {
+//                        lands.splice(i, 1);
+//                        break;
+//                    }
+//                }
+//            }
+//            x = startPoint.x, y = startPoint.y + 1;
+//            if (A[x] && A[x][y] && !walked[x + '-' + y] && x > 0 && x < w - 1 && y > 0 && y < h - 1) {
+//                start.push({x: x, y: y});
+//                walked[x + '-' + y] = true;
+//                for (let i = 0; i < lands.length; i++) {
+//                    if (lands[i].x == x && lands[i].y == y) {
+//                        lands.splice(i, 1);
+//                        break;
+//                    }
+//                }
+//            }
+//
+//        }
+//        return lands.length - starts;
+//    };
+//    console.log(numEnclaves([[0, 0, 0, 0], [1, 0, 1, 0], [0, 1, 1, 0], [0, 0, 0, 0]]));
+//    console.log(numEnclaves([[0, 1, 1, 0], [0, 0, 1, 0], [0, 0, 1, 0], [0, 0, 0, 0]]));
+</script>
 </body>
 </html>

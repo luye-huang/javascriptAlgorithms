@@ -157,7 +157,7 @@ var minDistance = function (word1, word2) {
                 cache[i][j] = Math.min(cache[i][j], getCacheValue(equalIndex - 1, j - 1, cache) + i - equalIndex);
             }
         }
-        // console.log(cache, i);
+        console.log(cache, i); //?? 打断点时是递增,但是控制台却全部输出最后状态. 网上查是chrome问题,二维数组展开时会重新取值,取的最终值
     }
     console.log(cache);
     return getCacheValue(len2 - 1, len1 - 1, cache);
@@ -173,7 +173,7 @@ function getCacheValue(h, w, cache) {
         return cache[h][w];
     }
 }
-// console.log(minDistance("intention", "execution"), 5);
+console.log(minDistance("intention", "execution"), 5);
 // console.log(minDistance("horse", "ros"), 3);
 // console.log(minDistance("sea", "ate"), 3);
 // console.log(minDistance("sea", "eat"), 2);
