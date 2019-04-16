@@ -133,7 +133,74 @@
         }
     };
     //    console.log(removeDuplicateLetters("bcabc"));
-    console.log(removeDuplicateLetters("cbacdcbc"));
+    //    console.log(removeDuplicateLetters("cbacdcbc"));
+
+
+    /** 996
+     * @param {number[]} A
+     * @return {number}
+     */
+    var numSquarefulPerms = function (A) {
+        if (A.length < 2) {
+            return 0;
+        } else if (A.length == 2) {
+            if (Number.isInteger(Math.sqrt(A[0] + A[1]))) {
+                if (A[0] == A[1]) {
+                    return 1;
+                } else {
+                    return 2;
+                }
+            } else {
+                return 0;
+            }
+        } else {
+            //记载不同路径
+            const ret = new Set();
+            buildMap([A.shift()], A, ret);
+            return ret.size;
+        }
+    };
+
+    //一个数组代表已有地点,收尾从新地点中链接,当新地点为零时,记入存放路径的set
+    var buildMap = function (map, candidates, result) {
+        if (!candidates.length) {
+            return result.add(map.join(','));
+        }
+        const end1 = map[0], end2 = map[map.length - 1], visited = [];
+        let found = false;
+        for (let i = 0; i < candidates.length; i++) {
+            const c = candidates[i];
+            if (visited.includes(c)) {
+                continue;
+            }
+            visited.push(c);
+            //在队头加
+            if (Number.isInteger(Math.sqrt(candidates[i] + end1))) {
+                map.unshift(candidates[i]);
+                found = true;
+                const sites = [...candidates.slice(0, i), ...candidates.slice(i + 1)];
+                buildMap(map, sites, result);
+                map.shift();
+            }
+            //在队尾加
+            if (Number.isInteger(Math.sqrt(candidates[i] + end2))) {
+                map.push(candidates[i]);
+                found = true;
+                const sites = [...candidates.slice(0, i), ...candidates.slice(i + 1)];
+                buildMap(map, sites, result);
+                map.pop();
+            }
+        }
+        if (!found) {
+            return;
+        }
+    };
+//    console.log(numSquarefulPerms([1, 1]));
+//    console.log(numSquarefulPerms([1, 17, 8]));
+//    console.log(numSquarefulPerms([1, 17, 8, 8]));
+//    console.log(numSquarefulPerms([2, 2, 2]));
+//    console.log(numSquarefulPerms([1, 17, 3]));
+
 
 </script>
 </body>
