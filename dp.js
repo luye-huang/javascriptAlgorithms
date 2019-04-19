@@ -157,9 +157,8 @@ var minDistance = function (word1, word2) {
                 cache[i][j] = Math.min(cache[i][j], getCacheValue(equalIndex - 1, j - 1, cache) + i - equalIndex);
             }
         }
-        console.log(cache, i); //?? 打断点时是递增,但是控制台却全部输出最后状态. 网上查是chrome问题,二维数组展开时会重新取值,取的最终值
+        // console.log(cache, i); //?? 打断点时是递增,但是控制台却全部输出最后状态. 网上查是chrome问题,二维数组展开时会重新取值,取的最终值
     }
-    console.log(cache);
     return getCacheValue(len2 - 1, len1 - 1, cache);
 };
 function getCacheValue(h, w, cache) {
@@ -173,7 +172,7 @@ function getCacheValue(h, w, cache) {
         return cache[h][w];
     }
 }
-console.log(minDistance("intention", "execution"), 5);
+// console.log(minDistance("intention", "execution"), 5);
 // console.log(minDistance("horse", "ros"), 3);
 // console.log(minDistance("sea", "ate"), 3);
 // console.log(minDistance("sea", "eat"), 2);
@@ -227,7 +226,7 @@ function isValid(num) {
  * @param {string} s3
  * @return {boolean}
  */
-var isInterleave = function(s1, s2, s3) {
+var isInterleave = function (s1, s2, s3) {
     let i1 = 0, i2 = 0, i3 = 0;
     //此操作费效率,导致tle
     if (arguments[3] != undefined) {
@@ -255,7 +254,7 @@ var isInterleave = function(s1, s2, s3) {
 };
 //去arguments后,通过
 var isInterleave = function (s1, s2, s3) {
-    return search(s1, s2, s3 , 0, 0, 0);
+    return search(s1, s2, s3, 0, 0, 0);
 }
 
 var search = function (s1, s2, s3, i1, i2, i3) {
@@ -669,6 +668,7 @@ function getDp(dp, left, right) {
 
 /**
  * 718
+ * 状态流转:最大子数组在以A的i index B的j index为结尾的情况下
  * @param {number[]} A
  * @param {number[]} B
  * @return {number}
@@ -676,40 +676,33 @@ function getDp(dp, left, right) {
 var findLength = function (A, B) {
     const lenA = A.length, lenB = B.length;
     if (!lenA || !lenB)return 0;
-    const cache = new Proxy({}, {
-        get(target, prop){
-            return target[prop] ? target[prop] : 0;
-        }
-    });
-    const contains = {};
+    let cache = new Array(lenB);
+    let ret = 0;
     for (let i = 0; i < lenA; i++) {
+        const cacheTmp = new Array(lenB);
         for (let j = 0; j < lenB; j++) {
-            const length = cache[(j - 1)];
-            if (length < lenB) {
-                if (contains[i + '-' + j + '-' + length]) {
-                    cache[j] = cache[j - 1] + 1;
-                } else if ((',' + A.slice(0, i + 1) + ',').includes(',' + B.slice(j - length, j + 1) + ',')) {
-                    cache[j] = cache[j - 1] + 1;
-                    for (let k = i; k < lenA; k++) {
-                        contains[k + '-' + j + '-' + length] = true;
-                    }
-                    for (let k = length; k >= 0; k--) {
-                        contains[i + '-' + j + '-' + k] = true;
-                    }
+            if (!i || !j) {
+                if (A[i] == B[j]) {
+                    cacheTmp[j] = 1;
                 } else {
-                    cache[j] = cache[j - 1];
+                    cacheTmp[j] = 0;
                 }
+            }
+            else if (A[i] == B[j]) {
+                cacheTmp[j] = cache[j - 1] + 1;
             } else {
-                cache[j] = cache[j - 1];
+                cacheTmp[j] = 0;
             }
         }
+        cache = [...cacheTmp]
+        ret = Math.max(ret, Math.max.apply(null, cacheTmp));
     }
-    return cache[(lenB - 1)];
+    return ret;
 };
+// console.log(findLength([0, 1, 1, 1, 1], [1, 0, 1, 0, 1]));
 // console.log(findLength([0, 0, 0, 0, 1], [1, 0, 0, 0, 0]));
 // console.log(findLength([1, 2, 3, 2, 1], [3, 2, 1, 4, 7]));
-// console.log(findLength([70, 39, 25, 40, 7]
-//     , [52, 20, 67, 5, 31]));
+// console.log(findLength([70, 39, 25, 40, 7], [52, 20, 67, 5, 31]));
 
 
 

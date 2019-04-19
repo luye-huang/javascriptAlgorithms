@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Binary</title>
+</head>
+<body>
+<script>
+    /** 668
+     * @param {number} m
+     * @param {number} n
+     * @param {number} k
+     * @return {number}
+     */
+    var findKthNumber = function (m, n, k) {
+        let limit = Math.min(m, n);
+        let adding = 0, y = 0, layer = 0, ret = Infinity;
+        while (k >= 0) {
+            layer++;
+            adding = layer <= limit ? layer : limit;
+            k -= adding;
+        }
+        k += adding;
+        return k ? (layer - 1 - (k - 1)) * (1 + (k - 1)) : layer - 1;
+
+//        return ret;
+    };
+    //
+    //    console.log(findKthNumber(2, 3, 6));
+    console.log(findKthNumber(2, 3, 5));
+    //    console.log(findKthNumber(45, 12, 471));
+</script>
+</body>
+</html>
