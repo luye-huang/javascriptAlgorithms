@@ -6,29 +6,32 @@
 </head>
 <body>
 <script>
-    /** 668
+    /** 668 binary search, 统计左右边界中每一行小于等于右边界值的个数的总和。若小于k,则右边界扩大,反之则缩小
      * @param {number} m
      * @param {number} n
      * @param {number} k
      * @return {number}
      */
     var findKthNumber = function (m, n, k) {
-        let limit = Math.min(m, n);
-        let adding = 0, y = 0, layer = 0, ret = Infinity;
-        while (k >= 0) {
-            layer++;
-            adding = layer <= limit ? layer : limit;
-            k -= adding;
+        let left = 1, right = m * n, mid = 0;
+        while (left < right) {
+            let count = 0;
+            mid = left + Math.floor((right - left) / 2);
+            for (let i = 1; i <= m; i++) {
+                count += Math.min(Math.floor(mid / i), n);
+            }
+            if (count < k) {
+                left = mid + 1;
+            } else {
+                right = mid;
+            }
         }
-        k += adding;
-        return k ? (layer - 1 - (k - 1)) * (1 + (k - 1)) : layer - 1;
-
-//        return ret;
+        return left;
     };
-    //
-    //    console.log(findKthNumber(2, 3, 6));
-    console.log(findKthNumber(2, 3, 5));
-    //    console.log(findKthNumber(45, 12, 471));
+    console.log(findKthNumber(2, 3, 5), 4);
+    console.log(findKthNumber(3, 3, 5), 3);
+    //    console.log(findKthNumber(2, 3, 5));
+    //    console.log(findKthNumber(2, 3, 5));
 </script>
 </body>
 </html>
