@@ -116,6 +116,69 @@
     //                [7, 2, 3]]
     //    ));
 
+    /** 679 先dfs层层走,或上两两相算。注意两两相算的情况只包含(+-)乘除(-+)或乘除+-乘除,否则已被dfs覆盖。最后注意js的坑点,比较时必须要tofixed!
+     * @param {number[]} nums
+     * @return {boolean}
+     */
+    var judgePoint24 = function (nums) {
+        nums = nums.sort((a, b)=> b - a);
+        return dfs679(nums, 24);
+    };
+    const dfs679 = (nums, sum)=> {
+//        console.log(nums, sum);
+        let ret = false;
+        if (nums.length == 2) {
+            return isVaildByTwo(nums[0], nums[1], sum);
+        } else if (nums.length > 2) {
+            for (let i = 0; i < nums.length; i++) {
+                if (!i || nums[i] != nums[i - 1]) {
+                    const arr = [...nums.slice(0, i), ...nums.slice(i + 1)];
+                    ret = ret || dfs679(arr, sum + nums[i])
+                            || dfs679(arr, sum - nums[i]) || dfs679(arr, nums[i] - sum)
+                            || dfs679(arr, sum * nums[i])
+                            || dfs679(arr, sum / nums[i]) || dfs679(arr, nums[i] / sum);
+                }
+            }
+            if (nums.length == 4) {
+                ret = ret || isVaildByTwo([nums[0], nums[1]], [nums[2], nums[3]], 24) || isVaildByTwo([nums[0], nums[2]], [nums[1], nums[3]], 24) || isVaildByTwo([nums[0], nums[3]], [nums[1], nums[2]], 24);
+            }
+            return ret;
+        }
+    };
+    const isVaildByTwo = (a, b, sum)=> {
+        if (Array.isArray(a)) {
+            let v1 = [a[0] + a[1], a[0] - a[1]];
+            let v2 = [b[0] + b[1], b[0] - b[1]];
+            for (let i = 0; i < 2; i++) {
+                for (let j = 0; j < 2; j++) {
+                    if ((v1[i] * v2[j]).toFixed(5) == sum.toFixed(5) || (v1[i] / v2[j]).toFixed(5) == sum.toFixed(5) || (v2[j] / v1[i]).toFixed(5) == sum.toFixed(5)) {
+                        return true;
+                    }
+                }
+            }
+            v1 = [a[0] * a[1], a[0] / a[1], a[1] / a[0]];
+            v2 = [b[0] * b[1], b[0] / b[1], b[1] / a[0]];
+            for (let i = 0; i < 3; i++) {
+                for (let j = 0; j < 3; j++) {
+                    if ((v1[i] * v2[j]).toFixed(5) == sum || (v1[i] / v2[j]).toFixed(5) == sum.toFixed(5) || (v2[j] / v1[i]).toFixed(5) == sum.toFixed(5)) {
+                        return true;
+                    }
+                }
+            }
+            return false;
+        } else {
+            return (a + b).toFixed(5) == sum.toFixed(5)
+                    || (a - b).toFixed(5) == sum.toFixed(5) || (b - a).toFixed(5) == sum.toFixed(5)
+                    || (a / b).toFixed(5) == sum.toFixed(5) || (b / a).toFixed(5) == sum.toFixed(5)
+                    || (a * b).toFixed(5) == sum.toFixed(5);
+        }
+    };
+
+    console.log(judgePoint24([3, 3, 7, 7]));
+    //    console.log(judgePoint24([1, 9, 1, 2]));
+    //    console.log(judgePoint24([4, 1, 3, 6]));
+    //    console.log(judgePoint24([4, 1, 8, 7]));
+
 </script>
 </body>
 </html>

@@ -68,18 +68,18 @@
      * @return {string}
      */
     var reorganizeString = function (S) {
-        const heap = new MyQueue(Array.from(S));
+        const queue = new MyQueue(Array.from(S));
         let ret = '', cur = 'null';
-        if (!S.length || heap.peek().value > Math.ceil(S.length / 2)) {
+        if (!S.length || queue.peek().value > Math.ceil(S.length / 2)) {
             return '';
         }
-        while (heap.peek() && (heap.peek().value > 1 || heap.peek().key == cur)) {
-            const {key, idx} = heap.sort(cur);
-            heap.decrease(idx);
+        while (queue.peek() && (queue.peek().value > 1 || queue.peek().key == cur)) {
+            const {key, idx} = queue.sort(cur);
+            queue.decrease(idx);
             cur = key;
             ret += cur;
         }
-        return ret + heap.stringfy();
+        return ret + queue.stringfy();
     };
     function MyQueue(list) {
         this.list = [];
