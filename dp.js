@@ -8,31 +8,19 @@
  * @param {string} p
  * @return {boolean}
  */
-var isMatch = function (s, p, i, j) {
-    i = Number.isInteger(i) ? i : s.length - 1;
-    j = Number.isInteger(j) ? j : p.length - 1;
-    if (i < 0) {
-        return !/[a-z|?]/.test(p.substring(0, j + 1));
-    }
-    if (j < 0) {
-        return false;
-    }
-    const cs = s.charAt(i), cp = p.charAt(j);
-    if (cp == '*') {
-        //不用,到此用完,继续用
-        return isMatch(s, p, i, j - 1) || isMatch(s, p, i - 1, j - 1) || isMatch(s, p, i - 1, j);
-    } else if (cp == '?') {
-        return isMatch(s, p, i - 1, j - 1);
-    } else {
-        if (cs == cp) {
-            return isMatch(s, p, i - 1, j - 1);
-        } else {
-            return false;
+var isMatch = function (s, p) {
+    let pattern = p.charAt(0);
+    for (let i = 1; i < p.length; i++) {
+        if (p.charAt(i) == p.charAt(i - 1) && p.charAt(i) == '*') {
+            continue;
         }
+        pattern += p.charAt(i);
     }
+    return dp44(s, pattern, s.length, pattern.length)
 };
 
 const dp44 = (s, p, i, j)=> {
+    console.log(s, p, i, j);
     if (i < 0) {
         return !/[a-z|?]/.test(p.substring(0, j + 1));
     }
@@ -42,25 +30,23 @@ const dp44 = (s, p, i, j)=> {
     const cs = s.charAt(i), cp = p.charAt(j);
     if (cp == '*') {
         //不用,到此用完,继续用
-        return isMatch(s, p, i, j - 1) || isMatch(s, p, i - 1, j - 1) || isMatch(s, p, i - 1, j);
-    } else if (cp == '?') {
-        return isMatch(s, p, i - 1, j - 1);
+        return dp44(s, p, i, j - 1) || dp44(s, p, i - 1, j - 1) || dp44(s, p, i - 1, j);
+    } else if (cp == '?' || cp == cs) {
+        return dp44(s, p, i - 1, j - 1);
     } else {
-        if (cs == cp) {
-            return isMatch(s, p, i - 1, j - 1);
-        } else {
-            return false;
-        }
+        return false;
     }
-}
+};
 
+console.time('222');
+console.log(false, isMatch("bbbababbabbbbabbbbaabaaabbbbabbbababbbbababaabbbab", "a******b*"));
+// console.log(true, isMatch('a', 'a*'));
+// console.log(false, isMatch('cb', 'a'));
+// console.log(true, isMatch('adceb', '*a*b'));
+// console.log(false, isMatch('acdcb', 'a*c?b'));
+// console.log(false, isMatch("abaabaaaabbabbaaabaabababbaabaabbabaaaaabababbababaabbabaabbbbaabbbbbbbabaaabbaaaaabbaabbbaaaaabbbabb", "ab*aaba**abbaaaa**b*b****aa***a*b**ba*a**ba*baaa*b*ab*"));
+console.timeEnd('222')
 
-console.log(false, isMatch('aab', 'c*a*b'));
-console.log(false, isMatch('aa', 'a'));
-console.log(true, isMatch('a', 'a*'));
-console.log(false, isMatch('cb', 'a'));
-console.log(true, isMatch('adceb', '*a*b'));
-console.log(false, isMatch('acdcb', 'a*c?b'));
 /**
  * @param {number[][]} grid
  * @return {number}
