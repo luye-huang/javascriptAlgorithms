@@ -2,6 +2,65 @@
  * Created by luye on 04/01/2018.
  */
 
+
+/** 44
+ * @param {string}
+ * @param {string} p
+ * @return {boolean}
+ */
+var isMatch = function (s, p, i, j) {
+    i = Number.isInteger(i) ? i : s.length - 1;
+    j = Number.isInteger(j) ? j : p.length - 1;
+    if (i < 0) {
+        return !/[a-z|?]/.test(p.substring(0, j + 1));
+    }
+    if (j < 0) {
+        return false;
+    }
+    const cs = s.charAt(i), cp = p.charAt(j);
+    if (cp == '*') {
+        //不用,到此用完,继续用
+        return isMatch(s, p, i, j - 1) || isMatch(s, p, i - 1, j - 1) || isMatch(s, p, i - 1, j);
+    } else if (cp == '?') {
+        return isMatch(s, p, i - 1, j - 1);
+    } else {
+        if (cs == cp) {
+            return isMatch(s, p, i - 1, j - 1);
+        } else {
+            return false;
+        }
+    }
+};
+
+const dp44 = (s, p, i, j)=> {
+    if (i < 0) {
+        return !/[a-z|?]/.test(p.substring(0, j + 1));
+    }
+    if (j < 0) {
+        return false;
+    }
+    const cs = s.charAt(i), cp = p.charAt(j);
+    if (cp == '*') {
+        //不用,到此用完,继续用
+        return isMatch(s, p, i, j - 1) || isMatch(s, p, i - 1, j - 1) || isMatch(s, p, i - 1, j);
+    } else if (cp == '?') {
+        return isMatch(s, p, i - 1, j - 1);
+    } else {
+        if (cs == cp) {
+            return isMatch(s, p, i - 1, j - 1);
+        } else {
+            return false;
+        }
+    }
+}
+
+
+console.log(false, isMatch('aab', 'c*a*b'));
+console.log(false, isMatch('aa', 'a'));
+console.log(true, isMatch('a', 'a*'));
+console.log(false, isMatch('cb', 'a'));
+console.log(true, isMatch('adceb', '*a*b'));
+console.log(false, isMatch('acdcb', 'a*c?b'));
 /**
  * @param {number[][]} grid
  * @return {number}
