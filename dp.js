@@ -4,48 +4,100 @@
 
 
 /** 44
+ * 由上向下超时后 改为由底向上
  * @param {string}
  * @param {string} p
  * @return {boolean}
  */
 var isMatch = function (s, p) {
+    let lenS = s.length, lenP = p.length;
+    if (!lenS) {
+        return !/[a-z|?]/.test(p);
+    }
+    if (!lenP) {
+        return false;
+    }
     let pattern = p.charAt(0);
+    //优化1:多个*时要合并成一个
     for (let i = 1; i < p.length; i++) {
         if (p.charAt(i) == p.charAt(i - 1) && p.charAt(i) == '*') {
             continue;
         }
         pattern += p.charAt(i);
     }
-    return dp44(s, pattern, s.length, pattern.length)
-};
-
-const dp44 = (s, p, i, j)=> {
-    console.log(s, p, i, j);
-    if (i < 0) {
-        return !/[a-z|?]/.test(p.substring(0, j + 1));
-    }
-    if (j < 0) {
-        return false;
-    }
-    const cs = s.charAt(i), cp = p.charAt(j);
-    if (cp == '*') {
-        //不用,到此用完,继续用
-        return dp44(s, p, i, j - 1) || dp44(s, p, i - 1, j - 1) || dp44(s, p, i - 1, j);
-    } else if (cp == '?' || cp == cs) {
-        return dp44(s, p, i - 1, j - 1);
+    lenP = pattern.length;
+    let cache = new Array(lenS).fill(false);
+    if (pattern.charAt(0) == '*') {
+        cache.fill(true);
+    } else if (pattern.charAt(0) == '?' || pattern.charAt(0) == s.charAt(0)) {
+        cache[0] = true;
     } else {
         return false;
     }
+    for (let i = 1; i < lenP; i++) {
+        const cacheCurrent = new Array(lenS);
+        if (pattern.charAt(i) == '*') {
+            for (let j = 0; j < lenS; j++) {
+                for (let k = 0; k <= j && !cacheCurrent[j]; k++) {
+                    cacheCurrent[j] = cacheCurrent[j] || cache[k];
+                }
+            }
+        } else {
+            cacheCurrent[0] = ['?', '*', s.charAt(0)].includes(pattern.charAt(i)) && !/[a-z|?]/.test(pattern.substr(0, i));
+            for (let j = 1; j < lenS; j++) {
+                if (pattern.charAt(i) == s.charAt(j) || pattern.charAt(i) == '?') {
+                    cacheCurrent[j] = cache[j - 1];
+                } else {
+                    cacheCurrent[j] = false;
+                }
+            }
+        }
+        cache = [...cacheCurrent];
+    }
+    // console.log(cache);
+    return cache.pop();
 };
 
-console.time('222');
-console.log(false, isMatch("bbbababbabbbbabbbbaabaaabbbbabbbababbbbababaabbbab", "a******b*"));
+
+// var isMatch = function (s, p) {
+//     let pattern = p.charAt(0);
+//     for (let i = 1; i < p.length; i++) {
+//         if (p.charAt(i) == p.charAt(i - 1) && p.charAt(i) == '*') {
+//             continue;
+//         }
+//         pattern += p.charAt(i);
+//     }
+//     return dp44(s, pattern, s.length, pattern.length)
+// };
+// ETL 由上向下,console中看到很多重叠子问题
+// const dp44 = (s, p, i, j)=> {
+//     if (i < 0) {
+//         return !/[a-z|?]/.test(p.substring(0, j + 1));
+//     }
+//     if (j < 0) {
+//         return false;
+//     }
+//     const cs = s.charAt(i), cp = p.charAt(j);
+//     if (cp == '*') {
+//         //不用,到此用完,继续用
+//         return dp44(s, p, i, j - 1) || dp44(s, p, i - 1, j - 1) || dp44(s, p, i - 1, j);
+//     } else if (cp == '?') {
+//         return dp44(s, p, i - 1, j - 1);
+//     } else {
+//         if (cs == cp) {
+//             return dp44(s, p, i - 1, j - 1);
+//         } else {
+//             return false;
+//         }
+//     }
+// };
+
+// console.log(true, isMatch("adceb", "*a*b"));
+// console.log(false, isMatch("bbbababbabbbbabbbbaabaaabbbbabbbababbbbababaabbbab", "a******b*"));
 // console.log(true, isMatch('a', 'a*'));
 // console.log(false, isMatch('cb', 'a'));
 // console.log(true, isMatch('adceb', '*a*b'));
 // console.log(false, isMatch('acdcb', 'a*c?b'));
-// console.log(false, isMatch("abaabaaaabbabbaaabaabababbaabaabbabaaaaabababbababaabbabaabbbbaabbbbbbbabaaabbaaaaabbaabbbaaaaabbbabb", "ab*aaba**abbaaaa**b*b****aa***a*b**ba*a**ba*baaa*b*ab*"));
-console.timeEnd('222')
 
 /**
  * @param {number[][]} grid
