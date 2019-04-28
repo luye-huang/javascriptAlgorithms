@@ -25,8 +25,12 @@
             }
         }
     };
-    QueueIndex.prototype.pop = function () {
-        return this.list.shift();
+    QueueIndex.prototype.pop = function (min) {
+        if (min) {
+            return this.list.pop();
+        } else {
+            return this.list.shift();
+        }
     };
     var trap = function (height) {
         if (height.length < 2) {
@@ -46,23 +50,33 @@
                     for (let i = site + 1, limit = height[site]; i < left; i++) {
                         ret += limit - height[i];
                     }
-                    alive -= left -site;
+                    alive -= left - site;
                     left = site;
                 }
                 if (site > right) {
                     for (let i = right + 1, limit = height[site]; i < site; i++) {
                         ret += limit - height[i];
                     }
-                    alive -= site -right;
+                    alive -= site - right;
                     right = site;
                 }
             }
         }
         return ret;
     };
+    //    console.log(trap([5, 2, 1, 2, 1, 5]));
+    //    console.log(trap([0, 1, 0, 2, 1, 0, 1, 3, 2, 1, 2, 1]));
 
-//    console.log(trap([5, 2, 1, 2, 1, 5]));
-//    console.log(trap([0, 1, 0, 2, 1, 0, 1, 3, 2, 1, 2, 1]));
+
+    /** 135
+     * @param {number[]} ratings
+     * @return {number}
+     */
+    var candy = function (ratings) {
+
+    };
+
+
     /** 767
      * @param {string} S
      * @return {string}

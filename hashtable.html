@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>HASHTABLE</title>
+</head>
+<body>
+<script>
+    /**
+     * Created by luye on 29/03/2019.
+     */
+
+    /** 85 找矩阵中每一点的以此点为基准向右向下方向的产生长方形的最大值。该点长方形的最大面积值为先计算该点向下所有为1点的长度,然后循环每一条边,以这个边为基点,分别向上向下找到该矩形,与最大值比较。
+     //     * @param {character[][]} matrix
+     * @return {number}
+     */
+    var maximalRectangle = function (matrix) {
+        const height = matrix.length;
+        const width = height ? matrix[0].length : 0;
+        if (!width || !height) {
+            return 0;
+        }
+        let ret = 0;
+        for (let i = 0; i < height; i++) {
+            for (let j = 0; j < width; j++) {
+                if (matrix[i][j] == '0') {
+                    continue;
+                }
+                let x, y = 0, ones = [];
+                while (i + y < height && matrix[i + y][j] == '1') {
+                    x = 1;
+                    while (j + x < width) {
+                        if (matrix[i + y][j + x] == '1') {
+                            x++;
+                        } else {
+                            break;
+                        }
+                    }
+                    ones.push(x);
+                    y++;
+                }
+                for (let k = 0; k < ones.length; k++) {
+                    //加上这个反而慢了
+//                    if (ones[k] == ones[k - 1]) {
+//                        continue;
+//                    }
+                    let count = ones[k];
+                    let down = k - 1;
+                    while (down >= 0 && ones[down] >= ones[k]) {
+                        count += ones[k];
+                        down--;
+                    }
+                    let up = k + 1;
+                    while (up < ones.length && ones[up] >= ones[k]) {
+                        count += ones[k];
+                        up++;
+                    }
+                    if (count > ret) {
+                        ret = count;
+                    }
+                }
+            }
+        }
+        return ret;
+    };
+
+//        console.log(maximalRectangle([['1', '1']]), 2);
+//        console.log(maximalRectangle([['1', '1'], ['1', '1']]), 4);
+//    console.log(maximalRectangle([
+//        ["1", "1", "1", "1", "1", "1", "1", "1"],
+//        ["1", "1", "1", "1", "1", "1", "1", "0"],
+//        ["1", "1", "1", "1", "1", "1", "1", "0"],
+//        ["1", "1", "1", "1", "1", "0", "0", "0"],
+//        ["0", "1", "1", "1", "1", "0", "0", "0"]]), 21);
+//        console.log(maximalRectangle([
+//            ["1", "0", "1", "0", "0"],
+//            ["1", "0", "1", "1", "1"],
+//            ["1", "1", "1", "1", "1"],
+//            ["1", "0", "0", "1", "0"]
+//        ]), 6);
+
+
+    /**
+     * 1001
+     * @param {number} N
+     * @param {number[][]} lamps
+     * @param {number[][]} queries
+     * @return {number[]}
+     */
+    var gridIllumination = function (N, lamps, queries) {
+        const res = [];
+        for (let i = 0; i < queries.length; i++) {
+            const toKill = [];
+            let status = 0, killed = 0;
+            for (let j = 0; j < lamps.length; j++) {
+                if (!status) {
+                    //检测query是否被灯泡照亮
+                    if (queries[i][0] == lamps[j][0] || queries[i][1] == lamps[j][1] || Math.abs(queries[i][0] - lamps[j][0]) == Math.abs(queries[i][1] - lamps[j][1])) {
+                        status = 1;
+                    }
+                }
+                //检测灯泡是否被query灭灯
+                if (Math.abs(queries[i][0] - lamps[j][0]) <= 1 && Math.abs(queries[i][1] - lamps[j][1]) <= 1) {
+                    toKill.push(j);
+                }
+            }
+            //灭灯
+            for (let j = 0; j < toKill.length; j++) {
+                lamps.splice(toKill[j] - killed, 1);
+                killed++;
+            }
+            res.push(status);
+        }
+        return res;
+    };
+
+    //    console.log(gridIllumination(10, [[6, 9], [6, 4], [4, 5], [7, 1], [9, 4], [1, 1], [2, 3], [4, 2], [9, 1]], [[7, 8], [7, 7], [8, 2], [4, 3], [8, 9]]));
+    //console.log(numDecodings('101'));
+    //    console.log(numDecodings('110'));
+    //    console.log(numDecodings('611'));
+    //    console.log(numDecodings('226'));
+    //    console.log(numDecodings('1212'));
+</script>
+</body>
+</html>
