@@ -92,7 +92,7 @@ function TreeNode(val) {
     this.left = this.right = null;
 }
 var buildTree = function (preorder, inorder) {
-    if(!preorder.length){
+    if (!preorder.length) {
         return null;
     }
     const root = new TreeNode(preorder[0]);
@@ -251,7 +251,7 @@ var pathSum = function (root, sum) {
 // console.log(postorderTraversal(node1));
 
 
-/** 236 获得两个值的路径,比较两个路径,找到第一个不同的元素
+/** 236 双递归 有点蠢的解法 大量重复操作。思路:定义一个子函数查找这个节点为根的树是否具有这个值,若左右都有,则返回根节点;若一边都有则递归这一节点。
  *  javascript问题 没过
  * Definition for a binary tree node.
  * function TreeNode(val) {
@@ -266,35 +266,29 @@ var pathSum = function (root, sum) {
  * @return {TreeNode}
  */
 var lowestCommonAncestor = function (root, p, q) {
-    const paths = [];
-    travarse(root, p, q, '', paths);
-    const path1 = paths[0].split(',');
-    const path2 = paths[1].split(',');
-    let count = 0, node = root;
-    while (path1[count] !== path2[count]) {
-        count++;
+    if (!root) {
+        return null;
     }
-    while (count > 0) {
-        node = node[path1[count]];
+    if (root.val == p.val || root.val == q.val) {
+        return root;
     }
-    console.log(paths);
-    return node.val;
+    const left = hasVal(root.left, p.val) || hasVal(root.left, q.val);
+    const right = hasVal(root.right, p.val) || hasVal(root.right, q.val);
+    if (left && right) {
+        return root;
+    } else if (left) {
+        return lowestCommonAncestor(root.left, p, q);
+    } else if (right) {
+        return lowestCommonAncestor(root.right, p, q);
+    }
 };
 
-var travarse = function (root, p, q, path, paths) {
-    if (root.val == p.val || root.val == q.val) {
-        paths.push(path);
-        if (paths.length == 2) {
-            return;
-        }
+const hasVal = (node, val)=> {
+    if (!node) {
+        return false;
     }
-    if (root.left) {
-        travarse(root.left, p, q, path + ',left', paths);
-    }
-    if (root.right) {
-        travarse(root.right, p, q, path + ',right', paths);
-    }
-}
+    return node.val == val || hasVal(node.left, val) || hasVal(node.right, val);
+};
 
 // function TreeNode(val) {
 //     this.val = val;
@@ -313,10 +307,13 @@ var travarse = function (root, p, q, path, paths) {
 // node1.left = node2;
 // node1.right = node3;
 // node2.left = node4;
-// node2.rigth = node5;
+// node2.right = node5;
 // node3.left = node9;
-// node3.rigth = node6;
+// node3.right = node6;
 // node5.left = node7;
-// node5.rigth = node8;
+// node5.right = node8;
+// // console.log(lowestCommonAncestor(node1, node3, node5), 3);
+// //
+// console.log(lowestCommonAncestor(node1, node2, node8), 5);
 //
-// console.log(lowestCommonAncestor(node1, node2, node3));
+// console.log(lowestCommonAncestor(node1, node2, node3), 3);
