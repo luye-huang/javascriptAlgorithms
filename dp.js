@@ -469,6 +469,28 @@ var maxProfit = function (prices) {
     return Math.max.apply(null, dp);
 };
 
+
+/** 312
+ * @param {number[]} nums
+ * @return {number}
+ */
+var maxCoins = function (nums) {
+    const len = nums.length;
+    if (len == 0) {
+        return 0;
+    } else if (len == 1) {
+        return nums[0]
+    } else if (len == 2) {
+        return nums[0] * nums[1];
+    }
+    const cache = new Array(len);
+    cache[0] = cache[1] = nums[0] * nums[1];
+    for (let i = 2; i < len; i++) {
+        cache[i] = Math.max(cache[i - 1] + nums[i], cache[i - 2] + nums[i] * nums[i - 1]);
+    }
+    return cache.pop();
+};
+
 // console.log(maxProfit([1, 2, 4]));
 
 // 368

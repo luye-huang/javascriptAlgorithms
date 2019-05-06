@@ -3,6 +3,12 @@
  */
 // 144 preorder traversal
 
+function TreeNode(val) {
+    this.val = val;
+    this.left = this.right = null;
+}
+
+
 // 94 inorder traversal
 /**
  * Definition for a binary tree node.
@@ -317,3 +323,135 @@ const hasVal = (node, val)=> {
 // console.log(lowestCommonAncestor(node1, node2, node8), 5);
 //
 // console.log(lowestCommonAncestor(node1, node2, node3), 3);
+
+
+/** 297 用队列做层序遍历
+ * Definition for a binary tree node.
+ * function TreeNode(val) {
+ *     this.val = val;
+ *     this.left = this.right = null;
+ * }
+ */
+
+
+/**
+ * Encodes a tree to a single string.
+ *
+ * @param {TreeNode} root
+ * @return {string}
+ */
+var serialize = function (root) {
+    if (!root) {
+        return '[]';
+    }
+    const queue = [root], ret = [root.val];
+    while (queue.length) {
+        const node = queue.shift();
+        if (node.left) {
+            queue.push(node.left);
+            ret.push(node.left.val);
+        } else {
+            ret.push(null);
+        }
+        if (node.right) {
+            queue.push(node.right);
+            ret.push(node.right.val);
+        } else {
+            ret.push(null);
+        }
+    }
+    while (ret[ret.length - 1] == null) {
+        ret.pop();
+    }
+    return `[${ret + ''}]`;
+};
+
+/**
+ * Decodes your encoded data to tree.
+ *
+ * //@param {string} data
+ * @return {TreeNode}
+ */
+var deserialize = function (data) {
+    if (!data || data.length < 3) {
+        return null;
+    }
+    data = data.substring(1, data.length - 1).split(',').map(a => a == '' ? null : parseInt(a));
+    const root = new TreeNode(data[0]);
+    const queue = [root];
+    data.shift();
+    let prop = 'left';
+    if (!data.length) {
+        return root;
+    }
+    while (true) {
+        const node = queue.shift();
+        if (node) {
+            prop = 'left';
+            let val = data.shift();
+            if (val != null) {
+                const child = new TreeNode(val);
+                node[prop] = child;
+                queue.push(child);
+            } else {
+                // queue.push(null);
+            }
+            if (!data.length) {
+                break;
+            }
+            val = data.shift();
+            prop = 'right';
+            if (val != null) {
+                const child = new TreeNode(val);
+                node[prop] = child;
+                queue.push(child);
+            } else {
+                // queue.push(null);
+            }
+            if (!data.length) {
+                break;
+            }
+        } else {
+            data.shift();
+            data.shift();
+            if (!data.length) {
+                break;
+            }
+        }
+    }
+    return root;
+};
+
+// const node1 = new TreeNode(1);
+// const node2 = new TreeNode(2);
+// const node3 = new TreeNode(3);
+// const node4 = new TreeNode(4);
+// const node5 = new TreeNode(5);
+//
+//
+// node1.left = node2;
+// node1.right = node3;
+// node3.left = node4;
+// node3.right = node5;
+
+
+const node1 = new TreeNode(5);
+const node2 = new TreeNode(2);
+const node3 = new TreeNode(3);
+const node4 = new TreeNode(2);
+const node5 = new TreeNode(4);
+const node6 = new TreeNode(3);
+const node7 = new TreeNode(1);
+
+node1.left = node2;
+node1.right = node3;
+node3.left = node4;
+node3.right = node5;
+node4.left = node6;
+node4.right = node7;
+
+//
+// console.log(serialize(node1));
+// console.log(deserialize(serialize(node1)));
+// console.log(deserialize('[1,2,3,,,4,5]'));
+// console.log(deserialize('[3,2,4,1]'));
