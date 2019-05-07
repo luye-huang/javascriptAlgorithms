@@ -175,16 +175,16 @@
             }
             visited.push(c);
             //在队头加
-            if (Number.isInteger(Math.sqrt(candidates[i] + end1))) {
-                map.unshift(candidates[i]);
+            if (Number.isInteger(Math.sqrt(c + end1))) {
+                map.unshift(c);
                 found = true;
                 const sites = [...candidates.slice(0, i), ...candidates.slice(i + 1)];
                 buildMap(map, sites, result);
                 map.shift();
             }
             //在队尾加
-            if (Number.isInteger(Math.sqrt(candidates[i] + end2))) {
-                map.push(candidates[i]);
+            if (Number.isInteger(Math.sqrt(c + end2))) {
+                map.push(c);
                 found = true;
                 const sites = [...candidates.slice(0, i), ...candidates.slice(i + 1)];
                 buildMap(map, sites, result);
