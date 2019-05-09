@@ -6,6 +6,56 @@
 </head>
 <body>
 <script>
+    /** 51
+     * @param {number} n
+     * @return {string[][]}
+     */
+    var solveNQueens = function (n) {
+        const ret = [], solution = [];
+        if (!n) {
+            return [];
+        }
+        dfs51(n, [], solution);
+        solution.forEach((v) => {
+            const matrix = [];
+            v.forEach((line)=> {
+                let str = '';
+                for (let i = 0; i < n; i++) {
+                    if (line.x == i) {
+                        str += 'Q';
+                    } else {
+                        str += '.';
+                    }
+                }
+                matrix.push(str);
+            });
+            ret.push(matrix);
+        });
+        return ret;
+    };
+
+    const dfs51 = (n, queens, solution)=> {
+        const y = queens.length;
+        if (y == n) {
+            solution.push(queens);
+        } else {
+            for (let x = 0; x < n; x++) {
+                let conflict = false;
+                for (let i = 0; i < queens.length; i++) {
+                    if (queens[i].x == x || Math.abs(queens[i].x - x) == Math.abs(queens[i].y - y)) {
+                        conflict = true;
+                        break;
+                    }
+                }
+                if (!conflict) {
+                    dfs51(n, [...queens, {x: x, y: y}], solution);
+                }
+            }
+        }
+    };
+    console.log(solveNQueens(4));
+
+
     // 93
     //    var restoreIpAddresses = function (s) {
     //        const res = [], indexes = [];
@@ -195,11 +245,11 @@
             return;
         }
     };
-//    console.log(numSquarefulPerms([1, 1]));
-//    console.log(numSquarefulPerms([1, 17, 8]));
-//    console.log(numSquarefulPerms([1, 17, 8, 8]));
-//    console.log(numSquarefulPerms([2, 2, 2]));
-//    console.log(numSquarefulPerms([1, 17, 3]));
+    //    console.log(numSquarefulPerms([1, 1]));
+    //    console.log(numSquarefulPerms([1, 17, 8]));
+    //    console.log(numSquarefulPerms([1, 17, 8, 8]));
+    //    console.log(numSquarefulPerms([2, 2, 2]));
+    //    console.log(numSquarefulPerms([1, 17, 3]));
 
 
 </script>
