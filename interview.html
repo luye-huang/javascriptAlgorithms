@@ -7,19 +7,23 @@
 </head>
 <body>
 <div id="div1">1</div>
-<div id="div2" style="width:200px;height: 200px;background: yellow">2<div id="div22" style="width:100px;height: 100px;background: blue">
-    nei<div id="div222" style="width:50px;height: 50px;background: green">inner</div></div></div>
+<div id="div2" style="width:200px;height: 200px;background: yellow">2
+    <div id="div22" style="width:100px;height: 100px;background: blue">
+        nei
+        <div id="div222" style="width:50px;height: 50px;background: green">inner</div>
+    </div>
+</div>
 <div id="div3">3</div>
 <div id="div4">4</div>
 <div id="div5">5</div>
 <script>
-    document.getElementById('div2').onclick=function(){
+    document.getElementById('div2').onclick = function () {
         console.log(1)
     }
-    document.getElementById('div22').onclick=function(){
+    document.getElementById('div22').onclick = function () {
         console.log(2)
     }
-    document.getElementById('div222').onclick=function(){
+    document.getElementById('div222').onclick = function () {
         console.log(3)
     }
     console.log('start');
@@ -54,22 +58,22 @@
     var b = new Array();
     const obj1 = {};
     const obj2 = obj1;
-    obj1.aa=2;
+    obj1.aa = 2;
     console.log(obj2.aa);
-    console.log('a==b?:', a==b);
+    console.log('a==b?:', a == b);
     function parent() {
 
     }
-    parent.prototype.say=function(){
+    parent.prototype.say = function () {
         alert(33);
     }
     function child() {
-        for(var prop in parent.prototype){
+        for (var prop in parent.prototype) {
             console.log(prop);
             child.prototype[prop] = parent.prototype[prop];
         }
     }
-    child.prototype.cal=function(){
+    child.prototype.cal = function () {
         console.log(44);
     }
     //    child.prototype = parent.prototype;
@@ -94,27 +98,27 @@
     //    var fn3 = new Fn3();
     //    Fn1.call(fn3);
 
-    let fn = function() {
-        this.attr = [0,1,2,3];
+    let fn = function () {
+        this.attr = [0, 1, 2, 3];
     };
     let obj = {};
     console.log(Reflect.apply(fn, obj, []))
-    fn.apply(obj,[2,2]);
+    fn.apply(obj, [2, 2]);
     console.log(obj);
 
 
-    (function (){
+    (function () {
         var x1 = x2 = 3;
     })();
     console.log(typeof x1);
 
     var myObject = {
         foo: "bar",
-        func: function() {
+        func: function () {
             var self = this;
             console.log("outer func: this.foo = " + this.foo);
             console.log("outer func: self.foo = " + self.foo);
-            (function() {
+            (function () {
                 console.log("inner func: this.foo = " + this.foo);
                 console.log("inner func: self.foo = " + self.foo);
             }());

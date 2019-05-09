@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>BFS:最短路径</title>
+</head>
+<body>
+<script>
+    /** 815
+     * @param {number[][]} routes
+     * @param {number} S
+     * @param {number} T
+     * @return {number}
+     */
+    var numBusesToDestination = function (routes, S, T) {
+        if (S == T) {
+            return 0;
+        }
+        let ret = 1;
+        const stops = {};
+        routes.forEach((r, i, arr)=> {
+            //去重, 这里用 r=[...new Set(r)]不好使
+            arr[i] = [...new Set(r)];
+            r.forEach(s=> {
+                if (stops[s]) {
+                    stops[s].push(i);
+                } else {
+                    stops[s] = [i];
+                }
+            })
+        });
+        let queue = stops[S].map(s=> {
+            return {route: s, visited: [s]};
+        });
+        //路线的队列,若终点在当前路线上,返回当前换线数;否则当前的路线上的交叉线站上未经过的线推入队列,最后换线数++
+        while (queue.length) {
+            const temp = [];
+            for (let i = 0; i < queue.length; i++) {
+                const route = routes[queue[i].route];
+                const visited = queue[i].visited;
+                for (let j = 0; j < route.length;) {
+                    if (route[j] == T) {
+                        return ret;
+                        //一个优化,若当前站不是交叉线或是起点,则把此站删去以后不必循环
+                    } else if (stops[route[j]].length == 1 || route[j] == S) {
+                        route.splice(j, 1);
+                    } else {
+                        stops[route[j]].forEach(r=> {
+                            if (!visited.includes(r)) {
+                                temp.push({route: r, visited: [...visited, r]});
+                            }
+                        });
+                        j++;
+                    }
+                }
+            }
+            ret++;
+            queue = temp;
+        }
+        console.log(stops, queue);
+        return -1;
+    };
+    //    console.log(numBusesToDestination([[1, 2, 7], [3, 6, 7]], 1, 6));
+</script>
+</body>
+</html>
