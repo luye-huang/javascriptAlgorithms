@@ -493,6 +493,70 @@ var maxCoins = function (nums) {
 
 // console.log(maxProfit([1, 2, 4]));
 
+
+/** 354  状态流转: 长度为n以第i个元素为结尾 F(n, i) = Max(F(n-1, 0)... F(n-1, length-1))
+ * @param {number[][]} envelopes
+ * @return {number}
+ */
+var maxEnvelopes = function (envelopes) {
+    const len = envelopes.length;
+    if (len < 2) {
+        return len;
+    }
+    let cache = new Array(len).fill(1);
+    const relations = {};
+    const indexes = [];
+    for (let i = 0; i < len; i++) {
+        relations[i] = [];
+        indexes.push(i);
+    }
+    for (let i = 0; i < len - 1; i++) {
+        for (let j = i; j < len; j++) {
+            const [[w1, h1], [w2, h2]] = [envelopes[i], envelopes[j]];
+            if (w1 > w2 && h1 > h2) {
+                relations[i].push(j);
+            } else if (w1 < w2 && h1 < h2) {
+                relations[j].push(i);
+            }
+        }
+    }
+    //必须加这个当进行一轮不递加时,要终止循环,不然会超时
+    let keepGoing = true;
+    for (let i = 1; i < len && keepGoing && indexes.length; i++) {
+        //记录变化的dp值,功能类似cache的上一轮备份
+        const change = [];
+        keepGoing = false;
+        for (let j = 0; j < indexes.length;) {
+            //当这个数的小于这个数的个数比i小,则移除
+            if (relations[indexes[j]].length < i) {
+                indexes.splice(j, 1);
+            } else {
+                let cur = cache[indexes[j]];
+                const arr = relations[indexes[j]];
+                for (let k = 0; k < arr.length; k++) {
+                    if (cache[arr[k]] + 1 > cur) {
+                        cur = cache[arr[k]] + 1;
+                        keepGoing = true;
+                        break;
+                    }
+                }
+                if (cur > cache[indexes[j]]) {
+                    change.push({i: indexes[j], v: cur});
+                }
+                j++;
+            }
+        }
+        change.forEach(c=> {
+            cache[c.i] = c.v;
+        });
+    }
+    return Math.max.apply(null, cache);
+};
+
+
+// console.log(maxEnvelopes([[4, 5], [4, 6], [6, 7], [2, 3], [1, 1]]));
+// console.log(maxEnvelopes([[4, 5], [6, 7], [2, 3]]));
+
 // 368
 /**
  * @param {number[]} nums
