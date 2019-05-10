@@ -29,15 +29,13 @@
                 }
             })
         });
-        let queue = stops[S].map(s=> {
-            return {route: s, visited: [s]};
-        });
+        let queue = stops[S];
+        let visited = stops[S];
         //路线的队列,若终点在当前路线上,返回当前换线数;否则当前的路线上的交叉线站上未经过的线推入队列,最后换线数++
         while (queue.length) {
             const temp = [];
             for (let i = 0; i < queue.length; i++) {
-                const route = routes[queue[i].route];
-                const visited = queue[i].visited;
+                const route = routes[queue[i]];
                 for (let j = 0; j < route.length;) {
                     if (route[j] == T) {
                         return ret;
@@ -47,7 +45,7 @@
                     } else {
                         stops[route[j]].forEach(r=> {
                             if (!visited.includes(r)) {
-                                temp.push({route: r, visited: [...visited, r]});
+                                temp.push(r);
                             }
                         });
                         j++;
@@ -56,11 +54,13 @@
             }
             ret++;
             queue = temp;
+            visited = visited.concat(temp);
         }
-        console.log(stops, queue);
+        //console.log(stops, queue);
         return -1;
     };
-    //    console.log(numBusesToDestination([[1, 2, 7], [3, 6, 7]], 1, 6));
+//    console.log(numBusesToDestination([[1, 2, 7], [3, 6, 7]], 1, 6));
+//    console.log(numBusesToDestination([[1, 7], [3, 5]], 5, 5));
 </script>
 </body>
 </html>
