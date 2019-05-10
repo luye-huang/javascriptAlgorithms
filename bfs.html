@@ -6,6 +6,87 @@
 </head>
 <body>
 <script>
+    /** 773 上下左右搜寻最短路径,visited记录当前布局,把二维数组转换成字符串
+     * @param {number[][]} board
+     * @return {number}
+     */
+    var slidingPuzzle = function (board) {
+        const TER = '1,2,3,4,5,0';
+        if (board + '' == TER) {
+            return 0;
+        }
+        let ret = 1;
+        board = [...board[0], ...board[1]];
+        const S = board.findIndex(a=>!a);
+        let queue = [{s: S, graph: board}], visited = [board + ''];
+        while (queue.length) {
+            const queueNext = [];
+            for (let i = 0; i < queue.length; i++) {
+                debugger;
+                const index = queue[i].s;
+                //左移
+                if (index % 3) {
+                    const arr = [...queue[i].graph];
+                    [arr[index - 1], arr[index]] = [arr[index], arr[index - 1]];
+                    const str = arr + '';
+                    if (str == TER) {
+                        return ret;
+                    }
+                    if (!visited.includes(str)) {
+                        visited.push(str);
+                        queueNext.push({s: index - 1, graph: arr});
+                    }
+                }
+
+                //右移
+                if (index % 3 < 2) {
+                    const arr = [...queue[i].graph];
+                    [arr[index + 1], arr[index]] = [arr[index], arr[index + 1]];
+                    const str = arr + '';
+                    if (str == TER) {
+                        return ret;
+                    }
+                    if (!visited.includes(str)) {
+                        visited.push(str);
+                        queueNext.push({s: index + 1, graph: arr});
+                    }
+                }
+                //上移
+                if (index > 2) {
+                    const arr = [...queue[i].graph];
+                    [arr[index - 3], arr[index]] = [arr[index], arr[index - 3]];
+                    const str = arr + '';
+                    if (str == TER) {
+                        return ret;
+                    }
+                    if (!visited.includes(str)) {
+                        visited.push(str);
+                        queueNext.push({s: index - 3, graph: arr});
+                    }
+                }
+                //下移
+                if (index < 3) {
+                    const arr = [...queue[i].graph];
+                    [arr[index + 3], arr[index]] = [arr[index], arr[index + 3]];
+                    const str = arr + '';
+                    if (str == TER) {
+                        return ret;
+                    }
+                    if (!visited.includes(str)) {
+                        visited.push(str);
+                        queueNext.push({s: index + 3, graph: arr});
+                    }
+                }
+            }
+            ret++;
+            queue = queueNext;
+        }
+        return -1;
+    };
+
+//    console.log(slidingPuzzle([[1, 2, 3], [4, 0, 5]]));
+//    console.log(slidingPuzzle([[1, 2, 3], [5, 4, 0]]));
+
     /** 815
      * @param {number[][]} routes
      * @param {number} S
@@ -54,13 +135,14 @@
             }
             ret++;
             queue = temp;
+            //处理过的路线不能重复
             visited = visited.concat(temp);
         }
         //console.log(stops, queue);
         return -1;
     };
-//    console.log(numBusesToDestination([[1, 2, 7], [3, 6, 7]], 1, 6));
-//    console.log(numBusesToDestination([[1, 7], [3, 5]], 5, 5));
+    //    console.log(numBusesToDestination([[1, 2, 7], [3, 6, 7]], 1, 6));
+    //    console.log(numBusesToDestination([[1, 7], [3, 5]], 5, 5));
 </script>
 </body>
 </html>
