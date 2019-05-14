@@ -6,15 +6,19 @@
 </head>
 <body>
 <script>
-//    str.charAt(2) = 'a'; charAt 不能被赋值
+    //    str.charAt(2) = 'a'; charAt 不能被赋值
 
     const arr = [1, 2, 3, 4];
-    //forEach 里 splice不好使
-    arr.forEach((v, i, array)=> {
-        array.splice(i, 1);
-        alert(v);
-        console.log(v, i, array);
+    arr.map(a=> {
+        return {a: a}
     });
+    console.log(arr);
+    //forEach 里 splice不好使
+//    arr.forEach((v, i, array)=> {
+//        array.splice(i, 1);
+//        alert(v);
+//        console.log(v, i, array);
+//    });
 
 
     //    const array2 = [...new Array(3)].map(()=> new Array(3).fill(1));

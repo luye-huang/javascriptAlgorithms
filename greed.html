@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <title>GREED</title>
 </head>
 <body>
 <script>
@@ -50,9 +50,124 @@
         }
         return W;
     };
-    console.log(findMaximizedCapital(1, 2, [1,2,3], [1,1,2]));
-//    console.log(findMaximizedCapital(4, 0, [0, 0, 0], [0, 1, 1]));
-//    console.log(findMaximizedCapital(7, 66, [1, 2, 3, 2], [0, 1, 1, 3]));
+    //    console.log(findMaximizedCapital(1, 2, [1, 2, 3], [1, 1, 2]));
+    //    console.log(findMaximizedCapital(4, 0, [0, 0, 0], [0, 1, 1]));
+    //    console.log(findMaximizedCapital(7, 66, [1, 2, 3, 2], [0, 1, 1, 3]));
+
+
+    /** 936 维护一个左界,右界构成的两个元素数组的数组。用整个印章盖完,得到这个数组。若能把这个数组盖完,则输出沿途结果。盖有三种情况:居中全部盖,左界局部盖(印章左边溢出),右界局部盖(印章右边溢出),
+     * @param {string} stamp
+     * @param {string} target
+     * @return {number[]}
+     */
+    var movesToStamp = function (stamp, target) {
+        const ret = [];
+        const lenTarget = target.length, lenStamp = stamp.length;
+        let segments = [];
+        let indexStart = 0;
+        for (let i = 0; i <= lenTarget - lenStamp;) {
+            if (target.substr(i, lenStamp) == stamp) {
+                segments.push([indexStart, i]);
+                ret.unshift(i);
+                i += lenStamp;
+                indexStart = i;
+            } else {
+                i++;
+            }
+        }
+        if (segments.length) {
+            //末尾未匹配,则入队
+            if (indexStart < lenTarget) {
+                segments.push([indexStart, lenTarget]);
+            }
+        } else {
+            return [];
+        }
+        //去除无长度片段
+        segments = segments.filter(s=>s[0] != s[1]);
+        while (segments.length) {
+            let segTmp = [];
+            Outer:for (let i = 0; i < segments.length; i++) {
+                const [left, right] = segments[i];
+                //从中间盖全部
+                const lenSeg = right - left, segStr = target.substring(left, right);
+                if (lenSeg <= lenStamp) {
+                    Inner:for (let j = 0; j < lenStamp; j++) {
+                        if (stamp.substr(j, lenSeg) == segStr) {
+                            //判断印章是否越界
+                            if (left - j >= 0 && left + lenStamp - j < lenTarget) {
+                                ret.unshift(left - j);
+                                continue Outer;
+                            }
+                        }
+                    }
+                }
+                let matched = false, reducedLeft = Infinity, reducedRight = Infinity;
+                let retLeft, retRight, segLeft, segRight;
+                //盖部分,印章左边溢出
+                if (left) {
+                    let idx = Math.min(left + lenStamp, right);
+                    reducedLeft = 0;
+                    while (idx > left) {
+                        //先试最长,逐步缩短
+                        if (target.substring(left, idx) == stamp.substring(lenStamp - (idx - left), lenStamp)) {
+                            matched = true;
+                            retLeft = idx - lenStamp;
+                            if (idx < right) {
+                                segLeft = [idx, right];
+                            }
+                            break;
+                        } else {
+                            idx--;
+                            reducedLeft++;
+                        }
+                    }
+                }
+                //盖部分,印章右边溢出
+                if (right < lenTarget) {
+                    let idx = Math.max(right - lenStamp, left);
+                    reducedRight = 0;
+                    while (idx < right) {
+                        if (target.substring(idx, right) == stamp.substr(0, right - idx)) {
+                            matched = true;
+                            retRight = idx;
+                            if (idx > left) {
+                                segRight = [left, idx];
+                            }
+                            break;
+                        } else {
+                            reducedRight++;
+                            idx++;
+                        }
+                    }
+                }
+                if (!matched) {
+                    return [];
+                }
+                //左右两种方案选择盖的多的
+                if (reducedLeft < reducedRight) {
+                    ret.unshift(retLeft);
+                    if (segLeft) {
+                        segTmp.push(segLeft);
+                    }
+                } else {
+                    ret.unshift(retRight);
+                    if (segRight) {
+                        segTmp.push(segRight);
+                    }
+                }
+            }
+            segments = segTmp;
+        }
+        return ret;
+    };
+//    console.log(movesToStamp('abca', 'aabcaca'));
+//    console.log(movesToStamp("zbs", "zbzbsbszbssbzbszbsss"));
+    //    console.log(movesToStamp("knk", "kknknkkknknkknkknknk"));
+    //    console.log(movesToStamp('abc', 'abcabc'));
+    //    console.log(movesToStamp('h', 'hhhhh'));
+    //    console.log(movesToStamp('abc', 'abcbc'));
+    //    console.log(movesToStamp('abc', 'ababc'));
 </script>
 </body>
 </html>
