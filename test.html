@@ -8,7 +8,7 @@
 <script>
     //    str.charAt(2) = 'a'; charAt 不能被赋值
 
-    const arr = [1, 2, 3, 4];
+    let arr = [1, 2, 3, 4];
     arr.map(a=> {
         return {a: a}
     });
@@ -19,6 +19,19 @@
 //        alert(v);
 //        console.log(v, i, array);
 //    });
+
+
+    //这样赋值,数组的所有元素的key有一个改变其他也跟着变
+    var obj = {1:true};
+    arr = [{key:obj}, {key: obj}];
+    for(let a of arr){
+        const {key} = a;
+//        const key = a.key;
+        key[2] = true;
+
+        console.log(arr);
+
+    }
 
 
     //    const array2 = [...new Array(3)].map(()=> new Array(3).fill(1));

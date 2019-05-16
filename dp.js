@@ -385,7 +385,7 @@ var search = function (s1, s2, s3, i1, i2, i3) {
 
 
 /** 174 dungeon game
- * 由右下角向左上角逐渐向上
+ * 由右下角向左上角逐渐向上,到每个宫格的血值为上和左两个方向的最小值,同时要满足于当前宫格的生存条件
  * @param {number[][]} dungeon
  * @return {number}
  */
