@@ -6,6 +6,43 @@
 </head>
 <body>
 <script>
+    /** 45
+     //     * @param {number[]} nums
+     * @return {number}
+     */
+    var jump = function (nums) {
+        const len = nums.length;
+        if (len < 2) {
+            return 0;
+        } else if (len == 2) {
+            return 1;
+        }
+        let indexComp = 0;
+        //先去掉前面有跳的更远的点
+        for (let i = 1; i < len; i++) {
+            if (nums[i] + i <= nums[indexComp] + indexComp) {
+                nums[i] = undefined;
+            } else {
+                indexComp = i;
+            }
+        }
+        let jumps = 0, indexJumping = 0;
+        const end = len - 1;
+        //开始跳,遇到去掉的点往回缩一下
+        while (indexJumping < end) {
+            let jump = nums[indexJumping];
+            if (jump + indexJumping >= end) {
+                return jumps + 1;
+            }
+            while (nums[jump + indexJumping] == undefined) {
+                jump--;
+            }
+            indexJumping += jump;
+            jumps++;
+        }
+        return jump;
+    };
+
     //    48 rotate image
     /**
      * @param {number[][]} matrix
@@ -86,9 +123,9 @@
         return ret < 3 ? 0 : ret;
     };
 
-    console.log(longestMountain([875,884,239,731,723,685]));
+    console.log(longestMountain([875, 884, 239, 731, 723, 685]));
     console.log(longestMountain([0, 1, 2, 3, 4, 5, 4, 3, 2, 1, 0]));
-        console.log(longestMountain([2, 1, 4, 7, 3, 2, 5]));
+    console.log(longestMountain([2, 1, 4, 7, 3, 2, 5]));
 
 </script>
 
