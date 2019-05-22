@@ -7,6 +7,28 @@
 <body>
 <script>
 
+    /** 330  数学规律: 如果从1开始加,每次加n,可加到的范围会扩充到2n,n就是miss
+     * @param {number[]} nums
+     * @param {number} n
+     * @return {number}
+     */
+    var minPatches = function (nums, n) {
+        let patch = 0, miss = 1, index = 0;
+        while (miss <= n) {
+            if (index < nums.length && miss >= nums[index]) {
+                miss += nums[index++];
+            } else {
+                patch++;
+                miss += miss;
+            }
+        }
+        return patch;
+    };
+//    console.log(minPatches([], 8));
+//    console.log(minPatches([1, 5, 10], 20));
+//    console.log(minPatches([1, 2, 2], 5));
+    //    console.log(minPatches([1, 2, 31, 33], 2147483647));
+
     /** 502
      * @param {number} k
      * @param {number} W
@@ -161,8 +183,8 @@
         }
         return ret;
     };
-//    console.log(movesToStamp('abca', 'aabcaca'));
-//    console.log(movesToStamp("zbs", "zbzbsbszbssbzbszbsss"));
+    //    console.log(movesToStamp('abca', 'aabcaca'));
+    //    console.log(movesToStamp("zbs", "zbzbsbszbssbzbszbsss"));
     //    console.log(movesToStamp("knk", "kknknkkknknkknkknknk"));
     //    console.log(movesToStamp('abc', 'abcabc'));
     //    console.log(movesToStamp('h', 'hhhhh'));
