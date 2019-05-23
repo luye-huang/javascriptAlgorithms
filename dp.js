@@ -352,7 +352,7 @@ var isInterleave = function (s1, s2, s3) {
 //去arguments后,通过
 var isInterleave = function (s1, s2, s3) {
     return search(s1, s2, s3, 0, 0, 0);
-}
+};
 
 var search = function (s1, s2, s3, i1, i2, i3) {
     //如果不存这三个变量,由超过30%变成10%,效率损耗比使用arguments小
@@ -375,13 +375,75 @@ var search = function (s1, s2, s3, i1, i2, i3) {
     } else if (char3 !== char1 && char3 == char2) {
         return search(s1, s2, s3, i1, i2 + 1, i3 + 1);
     }
-}
+};
 //    console.log(isInterleave("aabcc", "dbbca", "aadbbcbcac"));
 //    console.log(isInterleave("aabcc", "dbbca", "aadbbbaccc"));
 //    console.log(isInterleave("", "dbbca", "aadbbbaccc"));
 //    console.log(isInterleave("aabcc", "", "aadbbbaccc"));
 //    console.log(isInterleave("aabcc", "dbbca", ""));
 //    console.log(isInterleave("aaa", "bbb", "aaabbb"));
+
+
+/** 123
+ * @param {number[]} prices
+ * @return {number}
+ */
+var maxProfit = function (prices) {
+    //去掉头部大数和尾部小数,不然超时
+    let idx = 0;
+    while (prices[idx + 1] != undefined) {
+        if (prices[idx] >= prices[idx + 1]) {
+            prices.splice(idx, 1);
+        } else {
+            break;
+        }
+    }
+    idx = prices.length - 1;
+    while (prices[idx - 1] != undefined) {
+        if (prices[idx] <= prices[idx - 1]) {
+            prices.splice(idx, 1);
+            idx--;
+        } else {
+            break;
+        }
+    }
+    const len = prices.length;
+    if (len < 2) {
+        return 0;
+    }
+    //记录各段的最小数
+    const minNumber = {};
+    //记录各段的状态值
+    const dp = new Proxy({}, {
+        get(target, prop){
+            if (!target[prop]) {
+                return 0;
+            } else {
+                return target[prop];
+            }
+        }
+    });
+    for (let i = 0; i < len - 1; i++) {
+        let number = prices[i];
+        minNumber[i + '-' + i] = number;
+        for (let j = i + 1; j < len; j++) {
+            const priceJ = prices[j];
+            const key = i + '-' + j;
+            if (priceJ < number) {
+                number = priceJ;
+            }
+            minNumber[key] = number;
+            dp[key] = Math.max(dp[i + '-' + (j - 1)], priceJ - minNumber[i + '-' + (j - 1)]);
+        }
+    }
+    let ret = 0;
+    // 结果为0->len-1间各点分割成两段的和以及整段的最大值
+    for (let i = 1; i < len - 2; i++) {
+        ret = Math.max(ret, dp[0 + '-' + i] + dp[i + 1 + '-' + (len - 1)]);
+    }
+    ret = Math.max(ret, dp[0 + '-' + (len - 1)]);
+    return ret;
+};
 
 
 /** 174 dungeon game

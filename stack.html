@@ -146,6 +146,7 @@
 
             } else if (ch == ')') {
                 if (obj.key) {
+                    //换成双元素数组替代键值对,速度变慢
                     arr.push(JSON.parse(JSON.stringify(obj)));
                 }
                 let times = '';
