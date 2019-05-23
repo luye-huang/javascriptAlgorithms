@@ -127,6 +127,84 @@
     //            console.log(removeKdigits("112", 1), 11);
     //        console.log(removeKdigits("1234567890", 9), 0);
     //    console.log(removeKdigits("10", 2), 0);
+
+    /** 726 用一个栈记录'('
+     * @param {string} formula
+     * @return {string}
+     */
+    var countOfAtoms = function (formula) {
+        let stack = [], arr = [], obj = {key: '', val: 1}, idx = 0;
+        while (idx < formula.length) {
+            const ch = formula.charAt(idx++);
+            if (ch == '(') {
+                if (obj.key) {
+                    arr.push(JSON.parse(JSON.stringify(obj)));
+                }
+                //栈记录的是arr中上个(以后的数的起始位置, (不必入栈或者arr
+                stack.push(arr.length);
+                obj = {key: '', val: 1};
+
+            } else if (ch == ')') {
+                if (obj.key) {
+                    arr.push(JSON.parse(JSON.stringify(obj)));
+                }
+                let times = '';
+                while (/[0-9]/.test(formula.charAt(idx))) {
+                    times += formula.charAt(idx);
+                    idx++;
+                }
+                times = parseInt(times);
+                for (let i = stack.pop(); i < arr.length; i++) {
+                    arr[i].val *= times;
+                }
+                obj = {key: '', val: 1}
+            } else if (/[A-Z]/.test(ch)) {
+                if (obj.key) {
+                    arr.push(JSON.parse(JSON.stringify(obj)));
+                }
+                obj.key = ch;
+            } else if (/[a-z]/.test(ch)) {
+                obj.key += ch;
+            } else if (/[0-9]/.test(ch)) {
+                let num = ch;
+                while (/[0-9]/.test(formula.charAt(idx))) {
+                    num += formula.charAt(idx);
+                    idx++;
+                }
+                num = parseInt(num);
+                obj.val = num;
+                arr.push(JSON.parse(JSON.stringify(obj)));
+                obj = {key: '', val: 1}
+            }
+        }
+        if (obj.key) {
+            arr.push(JSON.parse(JSON.stringify(obj)));
+        }
+        obj = {};
+        arr.forEach(a=> {
+            if (obj[a.key]) {
+                obj[a.key] += a.val;
+            } else {
+                obj[a.key] = a.val;
+            }
+        });
+        let ret = '';
+        Object.keys(obj).sort().forEach(k=> {
+            ret += k;
+            if (obj[k] > 1) {
+                ret += obj[k];
+            }
+        });
+        return ret;
+    };
+
+
+//    console.log(countOfAtoms("H2O"));
+//    console.log(countOfAtoms("Mg(OH)2"));
+//    console.log(countOfAtoms("K4(ON(SO3)2)2"), 'K4O14N2S4');
+//    console.log(countOfAtoms("((HHe28Be26He)9)34"));
+
+
     /**
      * 735
      * @param {number[]} asteroids
