@@ -105,63 +105,63 @@ var isMatch = function (s, p) {
  */
 // 64
 // 思路:由下至少,动态规划,一层一层递增
-// var minPathSum = function (grid) {
-//     const memo = new Array(...grid);
-//     const width = grid[0].length, height = grid.length;
-//     const loopMax = Math.min(width, height);
-//     let x = 0, y = 0, step = 0, loop = 1;
-//     while (loop < loopMax) {
-//         console.log(x, y, step, loop);
-//         if (x == 0 && y == 0) {
-//             memo[x][y] = grid[0][0];
-//         } else if (x == 0 && y > 0) {
-//             memo[x][y] = memo[x][y - 1] + grid[x][y];
-//         } else if (x > 0 && y == 0) {
-//             memo[x][y] = memo[x - 1][y] + grid[x][y];
-//         } else {
-//             memo[x][y] = Math.min(memo[x - 1][y], memo[x][y - 1]) + grid[x][y];
-//         }
-//         if (step == 0) {
-//             x++;
-//             step = 1;
-//         } else if (step == 1) {
-//             if (y == loop - 1) {
-//                 step = 2;
-//                 x = 0;
-//             }
-//             y++;
-//         } else if (step == 2) {
-//             if (x == loop) {
-//                 step = 1;
-//                 loop++;
-//                 y = 0;
-//             }
-//             x++;
-//         }
-//     }
-//     if (width > height) {
-//         for (let i = 0; i < height; i++) {
-//             for (let j = loop; j < width; j++) {
-//                 if (i == 0) {
-//                     memo[i][j] = memo[i][j - 1] + grid[i][j];
-//                 } else {
-//                     memo[i][j] = Math.min(memo[i - 1][j], memo[i][j - 1]) + grid[i][j];
-//                 }
-//             }
-//         }
-//     } else if (width < height) {
-//         for (let i = loop; i < height; i++) {
-//             for (let j = 0; j < width; j++) {
-//                 if (j == 0) {
-//                     memo[i][j] = memo[i - 1][j] + grid[i][j];
-//                 } else {
-//                     memo[i][j] = Math.min(memo[i - 1][j], memo[i][j - 1]) + grid[i][j];
-//                 }
-//             }
-//         }
-//     }
-//     return memo[height - 1][width - 1];
-// };
+var minPathSum = function (grid) {
+    const memo = new Array(...grid);
+    const width = grid[0].length, height = grid.length;
+    const loopMax = Math.min(width, height);
+    let x = 0, y = 0, step = 0, loop = 1;
+    while (loop < loopMax) {
+        console.log(x, y, step, loop);
+        if (x == 0 && y == 0) {
+            memo[x][y] = grid[0][0];
+        } else if (x == 0 && y > 0) {
+            memo[x][y] = memo[x][y - 1] + grid[x][y];
+        } else if (x > 0 && y == 0) {
+            memo[x][y] = memo[x - 1][y] + grid[x][y];
+        } else {
+            memo[x][y] = Math.min(memo[x - 1][y], memo[x][y - 1]) + grid[x][y];
+        }
+        if (step == 0) {
+            x++;
+            step = 1;
+        } else if (step == 1) {
+            if (y == loop - 1) {
+                step = 2;
+                x = 0;
+            }
+            y++;
+        } else if (step == 2) {
+            if (x == loop) {
+                step = 1;
+                loop++;
+                y = 0;
+            }
+            x++;
+        }
+    }
+    if (width > height) {
+        for (let i = 0; i < height; i++) {
+            for (let j = loop; j < width; j++) {
+                if (i == 0) {
+                    memo[i][j] = memo[i][j - 1] + grid[i][j];
+                } else {
+                    memo[i][j] = Math.min(memo[i - 1][j], memo[i][j - 1]) + grid[i][j];
+                }
+            }
+        }
+    } else if (width < height) {
+        for (let i = loop; i < height; i++) {
+            for (let j = 0; j < width; j++) {
+                if (j == 0) {
+                    memo[i][j] = memo[i - 1][j] + grid[i][j];
+                } else {
+                    memo[i][j] = Math.min(memo[i - 1][j], memo[i][j - 1]) + grid[i][j];
+                }
+            }
+        }
+    }
+    return memo[height - 1][width - 1];
+};
 
 //思路 递归+记忆,由上至下
 
@@ -272,8 +272,6 @@ function getCacheValue(h, w, cache) {
 // console.log(minDistance("intention", "execution"), 5);
 // console.log(minDistance("horse", "ros"), 3);
 // console.log(minDistance("sea", "ate"), 3);
-// console.log(minDistance("sea", "eat"), 2);
-// console.log(minDistance("mart", "karma"), 3);
 
 
 // 1 5 1 1 : 1 2 2 4
@@ -445,6 +443,50 @@ var maxProfit = function (prices) {
     return ret;
 };
 
+
+/** 139  状态流转:长度从1开始循环,从尾部开始研究,收集字典中所有能在尾部找到的词,收集到的值或运算dp[l-这个的长度],返回dp数组的最后一个值
+ * @param {string} s
+ * @param {string[]} wordDict
+ * @return {boolean}
+ */
+var wordBreak = function (s, wordDict) {
+    const len = s.length;
+    if (!len) {
+        return false;
+    }
+    const dp = new Array(len + 1).fill(false);
+    dp[0] = true;
+    for (let l = 1; l <= len; l++) {
+        const str = s.substr(0, l);
+        const arr = [];
+        const words = [...wordDict];
+        for (let i = l - 1; i >= 0; i--) {
+            const ch = str.charAt(i);
+            for (let j = 0; j < words.length;) {
+                const word = words[j];
+                const idx = word.length - 1 - (l - 1 - i);
+                if (ch == word.charAt(idx)) {
+                    if (idx == 0) {
+                        words.splice(j, 1);
+                        arr.push(word);
+                    } else {
+                        j++;
+                    }
+                } else {
+                    words.splice(j, 1);
+                }
+            }
+        }
+        while (!dp[l] && arr.length) {
+            dp[l] = dp[l - arr.pop().length];
+        }
+    }
+    return dp.pop();
+};
+
+// console.log(wordBreak("leetcode", ["leet", "code"]));
+// console.log(wordBreak("applepenapple", ["apple", "pen"]));
+// console.log(wordBreak("catsandog", ["cats", "dog", "sand", "and", "cat"]));
 
 /** 174 dungeon game
  * 由右下角向左上角逐渐向上,到每个宫格的血值为上和左两个方向的最小值,同时要满足于当前宫格的生存条件
