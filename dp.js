@@ -944,6 +944,69 @@ function getDp(dp, left, right) {
 // console.log(longestPalindromeSubseq('bzb'));
 // console.log(longestPalindromeSubseq('bb'));
 
+
+/** 546 状态流转 取出每个状态的数组中所有与尾部相同的index,当前状态为尾部与每个index合并的最大值
+ * @param {number[]} boxes
+ * @return {number}
+ */
+var removeBoxes = function (boxes) {
+    const len = boxes.length;
+    if (len < 2) {
+        return len;
+    }
+    const remove = (left, right, name, dup)=> {
+        const ch = boxes[right];
+        if (left == right + 1) {
+            return dup * dup;
+        } else if (left == right) {
+            if (boxes[right] == name) {
+                return (dup + 1) * (dup + 1);
+            } else {
+                return dup * dup + 1;
+            }
+        }
+        //尾部与最后一个元素相同,加长尾部
+        if (ch == name) {
+            return remove(left, right - 1, name, dup + 1);
+        }
+        const key = left + '-' + right;
+        let ret = 0;
+        //取出所有与尾部相同的元素
+        const indexes = dict[name].filter(a=>a <= right && a >= left);
+        if (indexes.length) {
+            while (indexes.length) {
+                const idx = indexes.pop();
+                ret = Math.max(ret, remove(left, idx - 1, name, dup + 1) + remove(idx + 1, right - 1, ch, 1));
+            }
+            ret = Math.max(ret, remove(left, right - 1, ch, 1) + dup * dup);
+            dp[key] = ret - dup * dup;
+            return ret;
+        } else {
+            if (dp[key]) {
+                return dp[key] + dup * dup;
+            } else {
+                //无与尾部相同的元素,重新取最后一个元素为新的尾部
+                dp[key] = remove(left, right - 1, ch, 1);
+                return dp[key] + dup * dup;
+            }
+        }
+    };
+    const dict = {}, dp = {};
+    boxes.forEach((v, i) => {
+        if (dict[v]) {
+            dict[v].push(i);
+        } else {
+            dict[v] = [i];
+        }
+    });
+    return remove(0, len - 2, boxes[len - 1], 1);
+};
+
+// console.log(removeBoxes([1, 3, 2, 2]));
+// console.log(removeBoxes([1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 1, 3, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1]));
+// console.log(removeBoxes([1, 3, 2, 2, 2, 3, 4, 3, 1]));
+
+
 /**
  * 718
  * 状态流转:最大子数组在以A的i index B的j index为结尾的情况下
