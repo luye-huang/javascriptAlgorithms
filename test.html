@@ -9,9 +9,10 @@
     //    str.charAt(2) = 'a'; charAt 不能被赋值
 
     let arr = [1, 2, 3, 4];
-    arr.map(a=> {
-        return {a: a}
-    });
+    arr.splice(-1,0,16);
+//    arr.map(a=> {
+//        return {a: a}
+//    });
     console.log(arr);
     //forEach 里 splice不好使
 //    arr.forEach((v, i, array)=> {

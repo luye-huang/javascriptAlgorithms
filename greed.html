@@ -7,6 +7,86 @@
 <body>
 <script>
 
+    /** 218 从高往低排列进行插入,后面的不被前面的覆盖
+     * @param {number[][]} buildings
+     * @return {number[][]}
+     */
+    var getSkyline = function (buildings) {
+        if (!buildings.length) {
+            return [];
+        }
+        buildings = buildings.sort((a, b)=>b[2] - a[2]);
+        const ret = [], ranges = [{
+            left: buildings[0][0],
+            right: buildings[0][1],
+            heightLeft: buildings[0][2],
+            heightRight: buildings[0][2]
+        }];
+        buildings.shift();
+        while (buildings.length) {
+            const [l,r,h] = buildings.shift();
+            for (let i = 0; i < ranges.length; i++) {
+                const range = ranges[i];
+                if (r < range.left) { //左边不相交
+                    ranges.splice(i - ranges.length, 0, {left: l, right: r, heightLeft: h, heightRight: h});
+                    break;
+                } else if (l < range.left && r >= range.left && r <= range.right) { //左边溢出相交
+                    //高度相等时无突出点
+                    if (h < range.heightLeft) {
+                        ret.push([range.left, range.heightLeft]);
+                    }
+                    range.left = l;
+                    range.heightLeft = h;
+                    break;
+                } else if (l >= range.left && r <= range.right) {  //被包含
+                    break;
+                } else if (l <= range.right && r > range.right) {  //右边溢出相交
+                    //左边也溢出
+                    if (l < range.left) {
+                        if (h < range.heightLeft) {
+                            ret.push([range.left, range.heightLeft]);
+                        }
+                        range.left = l;
+                        range.heightLeft = h;
+                    }
+                    if (h < range.heightRight) {
+                        ret.push([range.right, h]);
+                    }
+                    range.right = r;
+                    range.heightRight = h;
+                    let j = 1;
+                    while (ranges[i + j] && ranges[i + j].left <= r) {
+                        if (h < ranges[i + j].heightLeft) {
+                            ret.push([ranges[i + j].left, ranges[i + j].heightLeft]);
+                        }
+                        range.right = ranges[i + j].right;
+                        range.heightRight= ranges[i + j].heightRight;
+                        if (r > ranges[i + j].right) {
+                            if (h < ranges[i + j].heightRight) {
+                                ret.push([ranges[i + j].right, h]);
+                            }
+                            range.right = r;
+                        }
+                        j++;
+                    }
+                    ranges.splice(i + 1, j - 1);
+                    break;
+                } else if (l > range.right) {  //右边不相交
+                    if (i == ranges.length - 1) {
+                        ranges.push({left: l, right: r, heightLeft: h, heightRight: h});
+                        break;
+                    }
+                }
+            }
+        }
+        ranges.forEach(r=>ret.push([r.left, r.heightLeft], [r.right, 0]));
+        return ret.sort((a, b)=>a[0] - b[0]);
+    };
+
+    //    console.log(getSkyline([[0, 5, 7], [5, 10, 7], [5, 10, 12], [10, 15, 7], [15, 20, 7], [15, 20, 12], [20, 25, 7]]));
+    //    console.log(getSkyline([[2, 4, 70], [3, 8, 30], [6, 100, 41], [7, 15, 70], [10, 30, 102], [15, 25, 76], [60, 80, 91], [70, 90, 72], [85, 120, 59]]));
+    //    console.log(getSkyline([[2, 9, 10], [3, 7, 15], [5, 12, 12], [15, 20, 10], [19, 24, 8]]));
+
     /** 330  数学规律: 如果从1开始加,每次加n,可加到的范围会扩充到2n,n就是miss
      * @param {number[]} nums
      * @param {number} n
