@@ -1088,5 +1088,44 @@ var findLength = function (A, B) {
 // console.log(findLength([70, 39, 25, 40, 7], [52, 20, 67, 5, 31]));
 
 
+/** 818  将target分成两段,循环1-target的中位数,结果为每种情况的最小值
+ * @param {number} target
+ * @return {number}
+ */
+var racecar = function (target) {
+    const dp = {0: 0, 1: 1, 3: 2};
+    //是否是回头造成的,如果在i点是回头的,在两段衔接时操作是R,反之是AA,会节省一次操作
+    const turn = {};
+    const dp818 = (target)=> {
+        if (dp[target]) {
+            return dp[target];
+        }
+        let power = 1, ret = Infinity, mid = Math.ceil(target / 2);
+        while (Math.pow(2, power) - 1 < target) {
+            power++;
+        }
+        if (target == Math.pow(2, power) - 1) {
+            return dp[target] = power;
+        }
+        for (let i = 1; i <= mid; i++) {
+            ret = Math.min(ret, dp818(i) + dp818(target - i) + (turn[i] ? 1 : 2));
+        }
+        const dpTurn = dp818(Math.pow(2, power) - 1 - target) + power + 1;
+        if (dpTurn <= ret) {
+            ret = dpTurn;
+            turn[target] = true;
+        }
+        return dp[target] = ret;
+    };
+    return dp818(target);
+};
+// console.log(racecar(7), 3);
+// console.log(racecar(2), 4);
+// console.log(racecar(5), 7);
+// console.log(racecar(4), 5);
+// console.log(racecar(3), 2);
+// console.log(racecar(6), 5);
+
+
 
 

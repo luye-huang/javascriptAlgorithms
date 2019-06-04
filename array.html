@@ -123,9 +123,33 @@
         return ret < 3 ? 0 : ret;
     };
 
-    console.log(longestMountain([875, 884, 239, 731, 723, 685]));
-    console.log(longestMountain([0, 1, 2, 3, 4, 5, 4, 3, 2, 1, 0]));
-    console.log(longestMountain([2, 1, 4, 7, 3, 2, 5]));
+    //    console.log(longestMountain([875, 884, 239, 731, 723, 685]));
+    //    console.log(longestMountain([0, 1, 2, 3, 4, 5, 4, 3, 2, 1, 0]));
+    //    console.log(longestMountain([2, 1, 4, 7, 3, 2, 5]));
+
+
+    /** 854
+     * @param {string} A
+     * @param {string} B
+     * @return {number}
+     */
+    var kSimilarity = function (A, B) {
+        A = Array.from(A);
+        B = Array.from(B);
+        const dict = {};
+        for (let i = 0; i < A.length;) {
+            if (A[i] == B[i]) {
+                A.splice(i, 1);
+                B.splice(i, 1);
+            } else {
+
+            }
+        }
+
+    };
+
+    console.log(kSimilarity("aabc", "abca"));
+
 
 </script>
 
