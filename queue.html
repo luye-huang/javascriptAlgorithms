@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Queue</title>
+    <title>Queue处理一个元素,会影响其他被处理的元素时考虑优先队列</title>
 </head>
 <body>
 <script>
@@ -72,63 +72,64 @@
      * @param {number[]} ratings
      * @return {number}
      */
-   var candy = function(ratings) {
+    var candy = function (ratings) {
         const len = ratings.length;
-        if(!len){
+        if (!len) {
             return 0;
         }
-        const queue = new QueueIndex(ratings);
+        const queue = new QueueIndex135(ratings);
         const candies = new Array(len);
         let ret = 0;
-        //console.log('q:', queue);
-        while(queue.peek()!=undefined){
+        while (queue.peek() != undefined) {
             const kid = queue.pop();
             //console.log('kid:', kid);
             let candy = 1;
-            let kidComp = kid-1;
-            if(ratings[kidComp]<ratings[kid]){
-                candy = candies[kid-1]+1;
+            let kidComp = kid - 1;
+            if (ratings[kidComp] < ratings[kid]) {
+                candy = candies[kid - 1] + 1;
             }
-            kidComp = kid+1;
-            if(ratings[kidComp]<ratings[kid]){
-                candy = Math.max(candies[kid+1]+1, candy) ;
+            kidComp = kid + 1;
+            if (ratings[kidComp] < ratings[kid]) {
+                candy = Math.max(candies[kid + 1] + 1, candy);
             }
             candies[kid] = candy;
-            //console.log(kid, candy);
             ret += candy;
         }
         return ret;
     };
 
-    class QueueIndex{
-        constructor(list){
+    class QueueIndex135 {
+        constructor(list) {
             this.value = [];
             this._list = list;
-            list.forEach((a, i)=>{
+            list.forEach((a, i)=> {
                 this.push(i);
-        });
+            });
         }
-        push(el){
+
+        push(el) {
             this.value.push(el);
             let index = this.value.length - 1;
-            while(index){
-                if(this._list[this.value[index]]>this._list[this.value[index-1]]){
-                    [this.value[index], this.value[index-1]]=[this.value[index-1], this.value[index]];
+            while (index) {
+                if (this._list[this.value[index]] > this._list[this.value[index - 1]]) {
+                    [this.value[index], this.value[index - 1]] = [this.value[index - 1], this.value[index]];
                     index--;
                 } else {
                     break;
                 }
             }
         }
-        pop(max){
-            if(max){
+
+        pop(max) {
+            if (max) {
                 return this.value.unshift();
             } else {
                 return this.value.pop();
             }
         }
-        peek(max){
-            if(max){
+
+        peek(max) {
+            if (max) {
                 return this.value[this.value.length - 1];
             } else {
                 return this.value[0];
@@ -212,6 +213,55 @@
     //    console.log(reorganizeString('aaab'));
     //    console.log(reorganizeString("eqmeyggvp"));
     //    console.log(reorganizeString("abbabbaaab"));
+
+
+    /** 857 计算每种ratio下的最少工资: 把工人按照ratio排列, 放入优先队列。多于k时,去除队中最大quality成员
+     * @param {number[]} quality
+     * @param {number[]} wage
+     * @param {number} K
+     * @return {number}
+     */
+    var mincostToHireWorkers = function (quality, wage, K) {
+        const queueByRatio = [0];
+        for (let i = 1; i < wage.length; i++) {
+            const ratio = wage[i] / quality[i];
+            let j = 0;
+            for (; j < queueByRatio.length; j++) {
+                if (ratio <= wage[queueByRatio[j]] / quality[queueByRatio[j]]) {
+                    queueByRatio.splice(j - queueByRatio.length, 0, i);
+                    break;
+                }
+            }
+            if (j == queueByRatio.length) {
+                queueByRatio.push(i);
+            }
+        }
+        const workers = queueByRatio.slice(0, K);
+        let sumQualilty = 0;
+        workers.forEach(w=> {
+            sumQualilty += quality[w];
+        });
+        let ret = sumQualilty * wage[workers[workers.length - 1]] / quality[workers[workers.length - 1]];
+        queueByRatio.splice(0, K);
+        while (queueByRatio.length) {
+            let idx = null, maxQuality = -Infinity, workerNew = queueByRatio.shift();
+            workers.push(workerNew);
+            workers.forEach((w, i)=> {
+                if (quality[w] > maxQuality) {
+                    idx = i;
+                    maxQuality = quality[w];
+                }
+            });
+            sumQualilty = sumQualilty - quality[workers[idx]] + quality[workerNew];
+            workers.splice(idx, 1);
+            ret = Math.min(ret, sumQualilty * wage[workerNew] / quality[workerNew]);
+        }
+        return parseFloat(ret.toFixed(5));
+    };
+//        console.log(mincostToHireWorkers([32, 43, 66, 9, 94, 57, 25, 44, 99, 19],
+//                [187, 366, 117, 363, 121, 494, 348, 382, 385, 262]
+//                , 4));
+//    console.log(mincostToHireWorkers([3, 1, 10, 10, 1], [4, 8, 2, 2, 7], 3));
 </script>
 </body>
 </html>

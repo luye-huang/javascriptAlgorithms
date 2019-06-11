@@ -5,53 +5,13 @@
     <title>TEST</title>
 </head>
 <body>
-<script>
-    //    str.charAt(2) = 'a'; charAt 不能被赋值
 
+<script>
     let arr = [1, 2, 3, 4];
     arr.splice(-1,0,16);
-//    arr.map(a=> {
-//        return {a: a}
-//    });
+
     console.log(arr);
-    //forEach 里 splice不好使
-//    arr.forEach((v, i, array)=> {
-//        array.splice(i, 1);
-//        alert(v);
-//        console.log(v, i, array);
-//    });
-
-
-    //这样赋值,数组的所有元素的key有一个改变其他也跟着变
-    var obj = {1:true};
-    arr = [{key:obj}, {key: obj}];
-    for(let a of arr){
-        const {key} = a;
-//        const key = a.key;
-        key[2] = true;
-
-        console.log(arr);
-
-    }
-
-
-    //    const array2 = [...new Array(3)].map(()=> new Array(3).fill(1));
-    const array2 = [];
-    for (let i = 0; i < 3; i++) {
-        const a = [];
-        for (let j = 0; j < 3; j++) {
-            a.push(j);
-        }
-        array2.push(a);
-    }
-    array2[0][0] = 5;
-    console.log(array2);
-    for (let i = 0; i < 3; i++) {
-        for (let j = 0; j < 3; j++) {
-            array2[i][j] = i + '' + j;
-        }
-        console.log(i, array2);
-    }
 </script>
+
 </body>
 </html>
