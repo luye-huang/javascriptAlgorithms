@@ -157,44 +157,6 @@
     //    console.log(findMaximizedCapital(7, 66, [1, 2, 3, 2], [0, 1, 1, 3]));
 
 
-    /** 871
-     * @param {number} target
-     * @param {number} startFuel
-     * @param {number[][]} stations
-     * @return {number}
-     */
-    var minRefuelStops = function (target, startFuel, stations) {
-        if (!stations.length) {
-            return startFuel >= target ? 0 : -1;
-        }
-        stations = stations.sort((a, b)=> a[0] - b[0]);
-        let ret = 0, miles = startFuel;
-        while (miles < target) {
-            let found = false;
-            for (let i = 0; i < stations.length;) {
-                if (startFuel >= stations[i][0]) {
-                    if (miles < stations[i][1] + startFuel - stations[i][0]) {
-                        miles = stations[i][1] + startFuel - stations[i][0];
-                    }
-                    stations.splice(i, 1);
-                    found = true;
-                } else {
-                    break;
-                }
-            }
-            if (!found) {
-                return -1;
-            }
-            ret++;
-            startFuel = miles;
-        }
-        return ret;
-    };
-    //    console.log(minRefuelStops(1, 1, []));
-
-    console.log(minRefuelStops(1, 100, []));
-    console.log(minRefuelStops(100, 10, [[10, 60], [20, 30], [30, 30], [60, 40]]));
-
     /** 936 维护一个左界,右界构成的两个元素数组的数组。用整个印章盖完,得到这个数组。若能把这个数组盖完,则输出沿途结果。盖有三种情况:居中全部盖,左界局部盖(印章左边溢出),右界局部盖(印章右边溢出),
      * @param {string} stamp
      * @param {string} target

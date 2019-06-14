@@ -1123,8 +1123,61 @@ var racecar = function (target) {
 // console.log(racecar(2), 4);
 // console.log(racecar(5), 7);
 // console.log(racecar(4), 5);
-// console.log(racecar(3), 2);
-// console.log(racecar(6), 5);
+
+
+/** 871
+ * @param {number} target
+ * @param {number} startFuel
+ * @param {number[][]} stations
+ * @return {number}
+ */
+var minRefuelStops = function (target, startFuel, stations) {
+    if (!stations.length) {
+        return startFuel >= target ? 0 : -1;
+    }
+    if (target <= startFuel) {
+        return 0;
+    }
+    let max = 0, maxLimits = [];
+    for (let i = 0; i < stations.length; i++) {
+        max += stations[i][1];
+        maxLimits.push(max);
+    }
+    const dp = {};
+    //到这个站时,还有多少油量
+    const getDp = (stop, miles)=> {
+        const key = stop + '+' + miles;
+        if (stop == 0) {
+            return startFuel >= miles ? 0 : Infinity;
+        }
+        if (dp[key]) {
+            return dp[key];
+        }
+        if (stations[stop][0] + miles <= startFuel) {
+            dp[key] = 0;
+            return 0;
+        }
+        console.log(stop, miles);
+        let ret = Infinity;
+        for (let i = stop - 1; i >= 0; i--) {
+            let milesTmp = miles + stations[stop][0] - stations[i][0] - stations[i][1];
+            milesTmp = milesTmp < 0 ? 0 : milesTmp;
+            ret = Math.min(ret, getDp(i, milesTmp) + 1);
+        }
+        // ret = startFuel - stations[0][0] >= miles ? 0 : Infinity;
+        dp[key] = ret;
+        return dp[key];
+    };
+
+    stations.push([target, 0]);
+    let ret = getDp(stations.length - 1, 0);
+    return ret == Infinity ? -1 : ret;
+};
+// console.log(minRefuelStops(1, 1, []));
+
+console.log(minRefuelStops(1000000, 80302, [[12748, 75028], [21540, 11850], [36864, 25496], [39669, 39081], [62411, 44850], [62543, 75308], [71876, 22824], [91233, 28242], [125465, 55476], [134447, 30142], [162311, 25479], [237873, 44207], [253004, 15987], [286723, 27746], [297347, 78929], [405104, 7639], [522743, 16473], [544323, 50212], [633437, 23099], [638168, 40596], [829362, 55751], [841938, 12428], [884418, 13624], [942918, 17945], [977507, 57606]]));
+console.log(minRefuelStops(1000, 299, [[13, 21], [26, 115], [100, 47], [225, 99], [299, 141], [444, 198], [608, 190], [636, 157], [647, 255], [841, 123]]));
+console.log(minRefuelStops(100, 10, [[10, 60], [20, 30], [30, 30], [60, 40]]));
 
 
 
