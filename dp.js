@@ -242,7 +242,7 @@ var minDistance = function (word1, word2) {
         for (let j = 0; j < len1; j++) {
             let equalIndex = -1, positions = pos[word1.charAt(j)];
             if (positions) {
-                positions = positions.filter(a=>a <= i);
+                positions = positions.filter(a => a <= i);
                 if (positions.length) {
                     equalIndex = positions[positions.length - 1];
                 }
@@ -258,6 +258,7 @@ var minDistance = function (word1, word2) {
     }
     return getCacheValue(len2 - 1, len1 - 1, cache);
 };
+
 function getCacheValue(h, w, cache) {
     if (h < 0 && w < 0) {
         return 0;
@@ -269,6 +270,7 @@ function getCacheValue(h, w, cache) {
         return cache[h][w];
     }
 }
+
 // console.log(minDistance("intention", "execution"), 5);
 // console.log(minDistance("horse", "ros"), 3);
 // console.log(minDistance("sea", "ate"), 3);
@@ -284,9 +286,9 @@ function getCacheValue(h, w, cache) {
  * @return {number}
  */
 var numDecodings = function (s) {
-    if (s.charAt(0) === '0' || s.includes('00'))return 0;
+    if (s.charAt(0) === '0' || s.includes('00')) return 0;
     const len = s.length;
-    if (len < 2)return len;
+    if (len < 2) return len;
     const arr = s.split('');
     const dp = [1];
     for (let i = 1; i < len; i++) {
@@ -374,8 +376,7 @@ var search = function (s1, s2, s3, i1, i2, i3) {
         return search(s1, s2, s3, i1, i2 + 1, i3 + 1);
     }
 };
-//    console.log(isInterleave("aabcc", "dbbca", "aadbbcbcac"));
-//    console.log(isInterleave("aabcc", "dbbca", "aadbbbaccc"));
+
 //    console.log(isInterleave("", "dbbca", "aadbbbaccc"));
 //    console.log(isInterleave("aabcc", "", "aadbbbaccc"));
 //    console.log(isInterleave("aabcc", "dbbca", ""));
@@ -413,7 +414,7 @@ var maxProfit = function (prices) {
     const minNumber = {};
     //记录各段的状态值
     const dp = new Proxy({}, {
-        get(target, prop){
+        get(target, prop) {
             if (!target[prop]) {
                 return 0;
             } else {
@@ -511,6 +512,7 @@ var calculateMinimumHP = function (dungeon) {
     }
     return dp[0][0];
 };
+
 function getValidDp(num1, num2) {
     if (num1 == undefined && num2 == undefined) {
         return 1;
@@ -534,11 +536,11 @@ var lengthOfLIS = function (nums) {
     let ret = 0;
     // nums.sort((a, b) => a - b);
     const len = nums.length;
-    if (len == 1)return len;
+    if (len == 1) return len;
     const memo = new Array(len).fill(1); //以第i个元素为结尾最长子序列的长度
     for (let i = 1; i < len; i++) {
         for (let j = i - 1; j >= 0; j--) {
-            if (nums[i] > nums[j] && memo[j] + 1 >= memo[i])memo[i] = memo[j] + 1;
+            if (nums[i] > nums[j] && memo[j] + 1 >= memo[i]) memo[i] = memo[j] + 1;
         }
         ret = Math.max(ret, memo[i]);
     }
@@ -565,8 +567,8 @@ var maxProfit = function (prices) {
         let max = -Infinity;
         for (let j = 0; j < i; j++) {
             let temp = prices[i] - prices[j];
-            if (j > 2)temp += dp[j - 2];
-            if (temp > max)max = temp;
+            if (j > 2) temp += dp[j - 2];
+            if (temp > max) max = temp;
         }
         dp.push(Math.max(max, dp[i - 1]));
     }
@@ -650,13 +652,12 @@ var maxEnvelopes = function (envelopes) {
                 j++;
             }
         }
-        change.forEach(c=> {
+        change.forEach(c => {
             cache[c.i] = c.v;
         });
     }
     return Math.max.apply(null, cache);
 };
-
 
 // console.log(maxEnvelopes([[4, 5], [4, 6], [6, 7], [2, 3], [1, 1]]));
 // console.log(maxEnvelopes([[4, 5], [6, 7], [2, 3]]));
@@ -669,7 +670,7 @@ var maxEnvelopes = function (envelopes) {
 var largestDivisibleSubset = function (nums) {
     const len = nums.length;
     if (!len) return [];
-    nums.sort((a, b) =>a - b);
+    nums.sort((a, b) => a - b);
     const comb = [];
     nums.forEach(v => comb.push([v]));
     for (let i = 1; i < len; i++) {
@@ -679,7 +680,7 @@ var largestDivisibleSubset = function (nums) {
             }
         }
     }
-    comb.sort((a, b)=>b.length - a.length);
+    comb.sort((a, b) => b.length - a.length);
     return comb[0];
 };
 // console.log(largestDivisibleSubset([1, 2, 4, 8]));
@@ -699,12 +700,12 @@ var wiggleMaxLength = function (nums) {
         let dp = [1];
         if (len < 2) return len;
         if (len == 2) {
-            if (nums[0] == nums[1])return 1;
+            if (nums[0] == nums[1]) return 1;
             return len;
         }
         const arr = [];
         for (let i = 1; i < len; i++) {
-            if (nums[i] != nums[i - 1])arr.push(nums[i]);
+            if (nums[i] != nums[i - 1]) arr.push(nums[i]);
         }
         arr.unshift(nums[0]);
         len = arr.length;
@@ -717,7 +718,7 @@ var wiggleMaxLength = function (nums) {
         }
         let result = 1;
         for (let i = 1; i < len; i++) {
-            if (dp[i] > result)result = dp[i];
+            if (dp[i] > result) result = dp[i];
         }
         return result;
     };
@@ -787,7 +788,6 @@ var canPartition = function (nums) {
     return memo[amount];
 };
 //
-//
 // console.log(canPartition([1, 2, 3, 4, 5, 6, 7]));
 // console.log(canPartition([1, 5, 11, 5]));
 // console.log(canPartition([1, 2,5]));
@@ -804,12 +804,12 @@ var findMaxForm = function (strs, m, n) {
     const len = strs.length;
     //js烦人的浅拷贝,需要两个二维数组
     const dpEven = new Proxy({}, {
-        get(target, prop){
+        get(target, prop) {
             return target[prop] ? target[prop] : 0;
         }
     });
     const dpOdd = new Proxy({}, {
-        get(target, prop){
+        get(target, prop) {
             return target[prop] ? target[prop] : 0;
         }
     });
@@ -880,7 +880,7 @@ var findRotateSteps = function (ring, key) {
     for (let i = 0; i < key.length; i++) {
         const des = pos.get(key.charAt(i));
         const cached = [];
-        des.forEach(d=> {
+        des.forEach(d => {
             let temp = Infinity;
             if (cache.size) {
                 for (let [key, value] of cache.entries()) {
@@ -900,7 +900,7 @@ var findRotateSteps = function (ring, key) {
             cached.push({key: d, value: temp});
         });
         cache.clear();
-        cached.forEach(c=> {
+        cached.forEach(c => {
             cache.set(c.key, c.value);
         });
     }
@@ -982,6 +982,7 @@ function getDp(dp, left, right) {
         return dp[left];
     }
 }
+
 // console.log(longestPalindromeSubseq("aabaaba"));
 // console.log(longestPalindromeSubseq('bzb'));
 // console.log(longestPalindromeSubseq('bb'));
@@ -996,7 +997,7 @@ var removeBoxes = function (boxes) {
     if (len < 2) {
         return len;
     }
-    const remove = (left, right, name, dup)=> {
+    const remove = (left, right, name, dup) => {
         const ch = boxes[right];
         if (left == right + 1) {
             return dup * dup;
@@ -1014,7 +1015,7 @@ var removeBoxes = function (boxes) {
         const key = left + '-' + right;
         let ret = 0;
         //取出所有与尾部相同的元素
-        const indexes = dict[name].filter(a=>a <= right && a >= left);
+        const indexes = dict[name].filter(a => a <= right && a >= left);
         if (indexes.length) {
             while (indexes.length) {
                 const idx = indexes.pop();
@@ -1058,7 +1059,7 @@ var removeBoxes = function (boxes) {
  */
 var findLength = function (A, B) {
     const lenA = A.length, lenB = B.length;
-    if (!lenA || !lenB)return 0;
+    if (!lenA || !lenB) return 0;
     let cache = new Array(lenB);
     let ret = 0;
     for (let i = 0; i < lenA; i++) {
@@ -1083,7 +1084,6 @@ var findLength = function (A, B) {
     return ret;
 };
 // console.log(findLength([0, 1, 1, 1, 1], [1, 0, 1, 0, 1]));
-// console.log(findLength([0, 0, 0, 0, 1], [1, 0, 0, 0, 0]));
 // console.log(findLength([1, 2, 3, 2, 1], [3, 2, 1, 4, 7]));
 // console.log(findLength([70, 39, 25, 40, 7], [52, 20, 67, 5, 31]));
 
@@ -1096,7 +1096,7 @@ var racecar = function (target) {
     const dp = {0: 0, 1: 1, 3: 2};
     //是否是回头造成的,如果在i点是回头的,在两段衔接时操作是R,反之是AA,会节省一次操作
     const turn = {};
-    const dp818 = (target)=> {
+    const dp818 = (target) => {
         if (dp[target]) {
             return dp[target];
         }
@@ -1121,61 +1121,60 @@ var racecar = function (target) {
 };
 // console.log(racecar(7), 3);
 // console.log(racecar(2), 4);
-// console.log(racecar(5), 7);
 // console.log(racecar(4), 5);
 
 
-/** 871
+/** 871 状态：每个站为终点，某到站数最远到达距离。状态流转：之前每点长度小于当前长度的状态循环的最大值
  * @param {number} target
  * @param {number} startFuel
  * @param {number[][]} stations
  * @return {number}
  */
 var minRefuelStops = function (target, startFuel, stations) {
-    if (!stations.length) {
+    const len = stations.length;
+    if (!len) {
         return startFuel >= target ? 0 : -1;
     }
-    if (target <= startFuel) {
+    if (startFuel >= target) {
         return 0;
     }
-    let max = 0, maxLimits = [];
-    for (let i = 0; i < stations.length; i++) {
-        max += stations[i][1];
-        maxLimits.push(max);
+    let dp = new Array(len).fill(null);
+    for (let i = 0; i < len; i++) {
+        if (startFuel - stations[i][0] >= 0) {
+            const dpTmp = startFuel + stations[i][1];
+            if (dpTmp >= target) {
+                return 1;
+            }
+            dp[i] = dpTmp;
+        } else {
+            break;
+        }
     }
-    const dp = {};
-    //到这个站时,还有多少油量
-    const getDp = (stop, miles)=> {
-        const key = stop + '+' + miles;
-        if (stop == 0) {
-            return startFuel >= miles ? 0 : Infinity;
+    // 多少站数的循环
+    for (let stops = 2; stops <= len + 1; stops++) {
+        const dpCache = [...dp];
+        // 结尾站的循环
+        for (let i = stops - 1; i < len; i++) {
+            let dpStation = 0;
+            //前面站的循环，前面每一站加上本站。起点处理好，比如长度为2时要从index 1开始
+            for (let j = stops - 2; j < i; j++) {
+                if (dp[j] === null || dp[j] < stations[i][0]) {
+                    continue;
+                }
+                const dpTmp = dp[j] + stations[i][1];
+                if (dpTmp >= target) {
+                    return stops;
+                }
+                dpStation = Math.max(dpTmp, dpStation);
+            }
+            dpCache[i] = dpStation;
         }
-        if (dp[key]) {
-            return dp[key];
-        }
-        if (stations[stop][0] + miles <= startFuel) {
-            dp[key] = 0;
-            return 0;
-        }
-        console.log(stop, miles);
-        let ret = Infinity;
-        for (let i = stop - 1; i >= 0; i--) {
-            let milesTmp = miles + stations[stop][0] - stations[i][0] - stations[i][1];
-            milesTmp = milesTmp < 0 ? 0 : milesTmp;
-            ret = Math.min(ret, getDp(i, milesTmp) + 1);
-        }
-        // ret = startFuel - stations[0][0] >= miles ? 0 : Infinity;
-        dp[key] = ret;
-        return dp[key];
-    };
-
-    stations.push([target, 0]);
-    let ret = getDp(stations.length - 1, 0);
-    return ret == Infinity ? -1 : ret;
+        dp = dpCache;
+    }
+    return -1;
 };
 // console.log(minRefuelStops(1, 1, []));
-
-console.log(minRefuelStops(1000000, 80302, [[12748, 75028], [21540, 11850], [36864, 25496], [39669, 39081], [62411, 44850], [62543, 75308], [71876, 22824], [91233, 28242], [125465, 55476], [134447, 30142], [162311, 25479], [237873, 44207], [253004, 15987], [286723, 27746], [297347, 78929], [405104, 7639], [522743, 16473], [544323, 50212], [633437, 23099], [638168, 40596], [829362, 55751], [841938, 12428], [884418, 13624], [942918, 17945], [977507, 57606]]));
+console.log(minRefuelStops(1000, 83, [[47, 220], [65, 1], [98, 113], [126, 196], [186, 218], [320, 205], [686, 317], [707, 325], [754, 104], [781, 105]]));
 console.log(minRefuelStops(1000, 299, [[13, 21], [26, 115], [100, 47], [225, 99], [299, 141], [444, 198], [608, 190], [636, 157], [647, 255], [841, 123]]));
 console.log(minRefuelStops(100, 10, [[10, 60], [20, 30], [30, 30], [60, 40]]));
 
