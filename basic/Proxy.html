@@ -5,6 +5,20 @@
     <title>Proxy</title>
 </head>
 <body>
+<script>
+    class MyPromise{
+        constructor(){
 
+        }
+    }
+    const p = new Promise((resolve)=>{
+        console.log(11);
+        resolve('from creation!');
+
+    });
+    console.log(p.then((paramResolve)=>{
+        console.log( paramResolve);
+    }));
+</script>
 </body>
 </html>

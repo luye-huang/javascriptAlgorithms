@@ -7,11 +7,111 @@
 <body>
 
 <script>
-
+    function test(a){
+        var arr = [];
+        return function(){
+            console.log(a);
+        }
+    }
+    test(0)();
+//    console.log(test(1)());
     let arr = [1, 2, 3, 4];
-    arr.splice(-1,0,16);
+//    arr.splice(-1,0,16);
 
     console.log(arr);
+
+
+
+    function middleware(fn, proxnext) {
+        fn(proxnext);
+    }
+
+    function p(runners, res){
+        var args = [];
+        while(runners.length){
+            const runner = runners.shift();
+//            console.log(runner.callee);
+            middleware(runner, function(arg){
+                console.log(arg);
+                args.push(arg);
+            })
+        }
+        res.apply(null, args);
+    }
+
+//    function p(runners, res) {
+//        //求助:实现这个p
+//        var args = [];
+//        function run() {
+//            if (runners.length) {
+//                //取出第一条函数
+//                var fn = runners.shift();
+//                //判断是否有参数
+//                var next = runners.shift();
+//                if (next) {
+//                    middleware(fn, function (result) {
+//                        args.push(result);
+//                        //如果是最后一个了。就把所有结果参数传给res方法，并执行
+//                        if (runners.length == 0) {
+//                            middleware(next, function (result2) {
+//                                args.push(result2);
+//                                res.apply(null, args);
+//                            });
+//                        } else {
+//                            //走这一段分支，说明，还有回调函数，继续递归
+//                            middleware(next, function (result2) {
+//                                args.push(result2);
+//                                run();
+//                            });
+//                        }
+//                    });
+//                } else {
+//                    if (fn) {
+//                        middleware(fn, function (result2) {
+//                            args.push(result2);
+//                            res.apply(null, args);
+//                        });
+//                    }
+//                }
+//            } else {
+//                res.apply(null, args);
+//            }
+//        }
+//        run();
+//    }
+
+    p([function (done) {
+        setTimeout(() => {
+            done('A');
+        }, 500);
+    }, function (done) {
+        setTimeout(() => {
+            done('B');
+        }, 300);
+    }, function (done) {
+        setTimeout(() => {
+            done('C');
+        }, 300);
+    }, function (done) {
+        setTimeout(() => {
+            done('D');
+        }, 300);
+    }, function (done) {
+        setTimeout(() => {
+            done('E');
+        }, 300);
+    }, function (done) {
+        setTimeout(() => {
+            done('F');
+        }, 300);
+    }], function (res1, res2, res3,res4,res5,res6) {
+        console.log(res1); // 'A'
+        console.log(res2); // 'B'
+        console.log(res3); // 'C'
+        console.log(res4); // 'D'
+        console.log(res5); // 'E'
+        console.log(res6); // 'F'
+    });
 </script>
 
 </body>

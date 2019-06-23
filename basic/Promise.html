@@ -5,6 +5,55 @@
     <title>Promise</title>
 </head>
 <body>
+<script>
 
+    class MyPromise{
+        constructor(handler){
+            this.status = 'pending';
+            this.resolveList = [];
+            this.value = null;
+            handler(this._resolve.bind(this), this._reject.bind(this));
+        }
+        then(success, fail){
+//            if(this.status == 'resolved'){
+//                this.resolveList.push(success);
+//            }
+            this.resolveList.push(success);
+            return this;
+        }
+        _resolve(val){
+            this.value = val;
+            this.resolveList.forEach((h, i, arr)=>{
+                h(this.value);
+                arr.shift();
+            });
+        }
+        _reject(){}
+        static all(){}
+    }
+
+    const mp = new MyPromise((resolve, reject) => {
+//        resolve('creating promise');
+        console.log('start');
+        setTimeout(() => {
+            resolve('creating promise');
+        }, 500);
+    });
+    console.log(2);
+    mp.then((arg) => {
+        console.log('then',arg);
+    });
+//    console.log(MyPromise.all());
+
+//    const p = new Promise((resolve, reject) => {
+//        console.log(11);
+//        resolve('from creation!');
+//
+//    });
+//    p.then((paramResolve) => {
+//        console.log(paramResolve);
+//    });
+    //    const pp = new Promise();
+</script>
 </body>
 </html>
