@@ -6,6 +6,47 @@
 </head>
 <body>
 <script>
+    /** 32 用栈存放元素极其index。每次进栈与栈尾比较是否配对,若配上则双双消除。最后计算栈中相邻index的差值,最大的为结果
+     * @param {string} s
+     * @return {number}
+     */
+    var longestValidParentheses = function (s) {
+        const len = s.length;
+        if (!len) {
+            return 0;
+        }
+        const arr = [...s];
+        const indexes = [];
+        arr.forEach((e, i)=> {
+            if (e == '(' || !indexes.length) {
+                indexes.push({e: e, i: i});
+            } else {
+                const ele = indexes.pop();
+                if (ele.e == '(') {
+                } else {
+                    indexes.push(ele, {e: e, i: i});
+                }
+            }
+        });
+        let ret = 0;
+        //加入头尾,处理全部消除等情况。
+        indexes.push({i: len});
+        indexes.unshift({i: -1});
+        for (let i = 0; i < indexes.length - 1; i++) {
+            ret = Math.max(ret, indexes[i + 1].i - indexes[i].i);
+        }
+        //消除的元素个数为index差值减1
+        ret = ret ? ret - 1 : ret;
+        return ret;
+    };
+
+//    console.log(longestValidParentheses("())"), 2);
+//    console.log(longestValidParentheses("()(()"), 2);
+//    console.log(longestValidParentheses("()()"), 4);
+//    console.log(longestValidParentheses(")()())"), 4);
+//    console.log(longestValidParentheses("(()"), 2);
+
+
 
     /**316
      * 用一个栈存放结果,如果栈内元素比当前元素大且后面还有该栈内元素则出栈

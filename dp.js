@@ -2,6 +2,49 @@
  * Created by luye on 04/01/2018.
  */
 
+/** 32 dp解法未过
+ * @param {string} s
+ * @return {number}
+ */
+
+// var longestValidParentheses = function (s) {
+//     const len = s.length;
+//     if (!len) {
+//         return 0;
+//     }
+//     const isLeft = [...s].map(c=>c == '(');
+//     const dp = new Proxy({}, {
+//         get(target, key){
+//             const [left, right] = key.split('-');
+//             const num = right - left;
+//             if (num < 1) {
+//                 return 0;
+//             }
+//             return target[key];
+//         }
+//     });
+//     for (let i = 1; i < len; i++) {
+//         for (let j = i - 1; j >= 0; j--) {
+//             let dpTmp;
+//             if (isLeft[j] && !isLeft[i]) {
+//                 dpTmp = Math.max(dp[j + '-' + (i - 1)], dp[j + 1 + '-' + (i - 1)] + 2);
+//             } else if (isLeft[j] && isLeft[i]) {
+//                 dpTmp = dp[j + '-' + (i - 1)];
+//             } else if (!isLeft[j] && !isLeft[i]) {
+//                 dpTmp = dp[j + 1 + '-' + i];
+//             } else {
+//                 dpTmp = dp[j + 1 + '-' + (i - 1)];
+//             }
+//             if (isLeft[j] && !isLeft[j + 1]) {
+//                 dpTmp = Math.max(dpTmp, dp[j + 2 + '-' + i] + 2);
+//             }
+//             dp[j + '-' + i] = dpTmp;
+//         }
+//     }
+//     return dp['0-' + (s.length - 1)];
+// };
+
+
 
 /** 44
  * 由上向下超时后 改为由底向上
@@ -1174,9 +1217,9 @@ var minRefuelStops = function (target, startFuel, stations) {
     return -1;
 };
 // console.log(minRefuelStops(1, 1, []));
-console.log(minRefuelStops(1000, 83, [[47, 220], [65, 1], [98, 113], [126, 196], [186, 218], [320, 205], [686, 317], [707, 325], [754, 104], [781, 105]]));
-console.log(minRefuelStops(1000, 299, [[13, 21], [26, 115], [100, 47], [225, 99], [299, 141], [444, 198], [608, 190], [636, 157], [647, 255], [841, 123]]));
-console.log(minRefuelStops(100, 10, [[10, 60], [20, 30], [30, 30], [60, 40]]));
+// console.log(minRefuelStops(1000, 83, [[47, 220], [65, 1], [98, 113], [126, 196], [186, 218], [320, 205], [686, 317], [707, 325], [754, 104], [781, 105]]));
+// console.log(minRefuelStops(1000, 299, [[13, 21], [26, 115], [100, 47], [225, 99], [299, 141], [444, 198], [608, 190], [636, 157], [647, 255], [841, 123]]));
+// console.log(minRefuelStops(100, 10, [[10, 60], [20, 30], [30, 30], [60, 40]]));
 
 
 
