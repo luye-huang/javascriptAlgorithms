@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<div id="container">
+    <div a1="11">1</div>
+    <div>2</div>
+    <div>3</div>
+</div>
+<script>
+    const c = document.getElementById('container');
+    const div = document.createElement('div');
+    div.innerHTML = 55;
+    c.lastElementChild.after(div);
+    console.log(c);
+</script>
+</body>
+</html>
