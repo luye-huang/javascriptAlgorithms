@@ -2,9 +2,76 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>$Title$</title>
+    <title>Title</title>
 </head>
 <body>
-$END$
+<script>
+    new Promise((resolve)=> {
+        resolve(66);
+    }).then((p)=> {
+        console.log(p);
+//        return p + 1;
+    }).then('hahah').then(p=> {
+        console.log(p);
+    });
+
+//
+//    Promise.resolve()
+//            .then(() => {
+//                return new Error('error!!!')
+//            })
+//            .then((res) => {
+//                console.log('then: ', res)
+//            })
+//            .catch((err) => {
+//                console.log('catch: ', err)
+//            })
+
+//    Promise.resolve(1)
+//            .then((res) => {
+//                console.log(res);
+//                return 2
+//            })
+//            .catch((err) => {
+//                return 3
+//            })
+//            .then((res) => {
+//                console.log(res)
+//            })
+
+    //    async function func1(){   
+    //        console.log('func1'); //1
+    //        var a = await func2(); //当await返回非promise
+    //        console.log('func1 return');} //4
+    //    function func2(){
+    //        console.log('func2'); //2
+    //    } //返回undefined
+    //    func1();
+    //    new Promise(function(resolve){
+    //        console.log('promise1'); //3
+    //        resolve('resolved');
+    //    }).then(function(data){
+    //        console.log(data); //5
+    //    });
+
+
+    //    async function func1(){
+    //        console.log('func1'); //1
+    //        var a = await func2(); //当await返回promise   
+    //        console.log('func1 return'); //4
+    //    }
+    //    async function func2(){
+    //        console.log('func2');//2
+    //    } //返回promise
+    //    func1();
+    //    new Promise(function(resolve){
+    //        console.log('promise1'); //3
+    //        resolve('resolved');
+    //    }).then(function(data){
+    //        console.log(data); //5
+    //    });
+
+
+</script>
 </body>
 </html>

@@ -2,9 +2,107 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>$Title$</title>
+    <title>Title</title>
 </head>
 <body>
-$END$
+<button id="dv"></button>
+<script>
+    String.prototype.concat = function () {
+//        var fn = String.prototype.concat;
+//        arguments[1]();
+        console.log(arguments.callee);
+//        return fn.apply(this, arguments);
+    }
+    console.log(''.concat('11', ()=> {
+        console.log(66);
+    }));
+
+    //    window.history.pushState('forward', null, '#');
+    //    window.onpopstate = function () {
+    ////        history.go(1);
+    //        alert(9)
+    //    };
+    //
+    //
+    //    function pushHistory() {
+    //        var state = {
+    //            title: "title",
+    //            url: "#"
+    //        };
+    //        window.history.pushState(state, "title", "--hly");
+    //    }
+    //    pushHistory();
+    //    window.addEventListener("popstate", function(e) {
+    //        console.log(e);
+    //        alert("我监听到了浏览器的返回按钮事件啦");//根据自己的需求实现自己的功能
+    //    }, false);
+
+    function aop(type) {
+        var source = window.history[type];
+        return function () {
+            var event = new Event(type);
+            event.arguments = arguments;
+            window.dispatchEvent(event);
+            var rewrite = source.apply(this, arguments);
+            return rewrite;
+        };
+    }
+
+    function aop2(type) {
+        var source = window[type];
+        return function () {
+            var event = new Event(type);
+            event.arguments = arguments;
+            window.dispatchEvent(event);
+//            var rewrite = source.apply(this, arguments);
+//            return rewrite;
+        };
+    }
+
+    window.Number = aop2('Number');
+    var num = Number(2);
+    window.addEventListener('Number', ()=> {
+        console.log(33)
+    });
+
+    console.log(num);
+
+
+    // 第二阶段：将 pushState 和 replaceState 进行基于 AOP 思想的代码注入
+    window.history.pushState = aop('pushState');
+    window.history.replaceState = aop('replaceState'); // 更改路由，不会留下历史记录
+
+    // 第三阶段：捕获pushState 和 replaceState
+    window.addEventListener('pushState', function () {
+        // 上报【进入页面】事件
+        console.log(arguments);
+        console.log(event.arguments);
+        alert(99);
+    }, true);
+    //    window.addEventListener('popstate', function () {
+    //        // 上报【进入页面】事件
+    //        console.log(arguments);
+    //        alert(88);
+    //    }, true);
+    //    window.onpopstate = function(event) {
+    //        alert(77);
+    //    };
+
+    console.log('fn', window.history.pushState);
+    //    window.history.pushState(null, null, 'hly');
+
+
+    var event = new Event('kk');
+    //    window.dispatchEvent(event);
+    var dv = document.getElementById('dv');
+    dv.addEventListener('click', ()=> {
+//        alert(33);
+    });
+    dv.addEventListener('kk', ()=> {
+//        alert(44);
+    });
+    dv.click();
+    dv.dispatchEvent(event);
+</script>
 </body>
 </html>

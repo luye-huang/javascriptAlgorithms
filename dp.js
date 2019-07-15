@@ -767,7 +767,7 @@ var wiggleMaxLength = function (nums) {
     };
 
 
-/** 403 状态流转: 每一点跳过来的所有长度的集合等于所有跳到前面点的长度与两点差距得比较,是否合法。若最后那点跳过来的长度集合不为空,返回true
+/** 403 状态流转: 计算每一点跳过来的所有计算跳的能力的长度的集合（units）：所有前面点该属性l,l-1,l+1是否包含两点宽度差值。若最后那点跳过来的长度集合不为空,返回true
  * @param {number[]} stones
  * @return {boolean}
  */
@@ -775,6 +775,7 @@ var canCross = function (stones) {
     if (stones.length == 2) {
         return stones[1] - stones[0] == 1
     }
+    //units 在该点的起跳能力
     //earliest 是一个优化,等到达此点的前于此点的范围一定小于等于前一个点的该属性 beats 5% => beats 23%
     const dp = [{units: new Set(), earliest: -1}, {units: new Set([1]), earliest: 0}];
     for (let i = 2; i < stones.length; i++) {

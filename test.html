@@ -7,19 +7,19 @@
 <body>
 
 <script>
-    const f0 = ()=>{
+    const f0 = ()=> {
         console.log(0);
     };
-    const f1 = ()=>{
+    const f1 = ()=> {
         console.log(1);
     };
-    const f2 = ()=>{
+    const f2 = ()=> {
         console.log(2);
     };
-    const f3 = ()=>{
+    const f3 = ()=> {
         console.log(3);
     };
-    const f4 = ()=>{
+    const f4 = ()=> {
         console.log(4);
     };
     Promise.reject().then(f1, f2).then(f3, f4);
@@ -27,7 +27,7 @@
         return a + b + this.cc;
     }
 
-//    console.log(add.call({cc: 3}, 1, 2));
+    //    console.log(add.call({cc: 3}, 1, 2));
 
     Function.prototype.es3Call = function (context) {
         var content = context || window;
