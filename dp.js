@@ -1168,7 +1168,7 @@ var racecar = function (target) {
 // console.log(racecar(4), 5);
 
 
-/** 871 状态：每个站为终点，某到站数最远到达距离。状态流转：之前每点长度小于当前长度的状态循环的最大值
+/** 871 状态：某个站为终点，经历多少个站数最远到达距离。状态流转：本站本属性为前面的车站循环的本属性的最大值
  * @param {number} target
  * @param {number} startFuel
  * @param {number[][]} stations
@@ -1194,7 +1194,7 @@ var minRefuelStops = function (target, startFuel, stations) {
             break;
         }
     }
-    // 多少站数的循环
+    // 经历多少站数的循环
     for (let stops = 2; stops <= len + 1; stops++) {
         const dpCache = [...dp];
         // 结尾站的循环
