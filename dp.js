@@ -506,6 +506,7 @@ var wordBreak = function (s, wordDict) {
         const words = [...wordDict];
         for (let i = l - 1; i >= 0; i--) {
             const ch = str.charAt(i);
+            //所有的词从最后一位向前开始比较，有一位不符合就立即splice掉，若符合且到头index=0时收入arr用来计算dp
             for (let j = 0; j < words.length;) {
                 const word = words[j];
                 const idx = word.length - 1 - (l - 1 - i);
