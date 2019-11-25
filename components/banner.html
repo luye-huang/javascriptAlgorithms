@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <!-- <meta name="viewport" content="width=<device-width>, initial-scale=1.0"> -->
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+
+<body>
+    <div style=height:400px;width:300px;background-color:azure>
+        <div id=cc style=height:360px;width:900px;background-color:chartreuse;position:relative></div>
+    </div>
+    <script>
+        let left = 0
+        const element = document.getElementById('cc')
+        function render() {
+            left += 1;
+            element.style.left = left + 'px';
+            if (left < 1000) {
+                //递归渲染
+                window.requestAnimationFrame(render);
+            }
+        }
+
+        //第一帧渲染
+        window.requestAnimationFrame(render);
+    </script>
+</body>
+
+</html>

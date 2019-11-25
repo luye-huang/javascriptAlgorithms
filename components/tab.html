@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=<device-width>, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <style>
+        .container {
+            height: 400px;
+            width: 400px;
+        }
+
+        .tab-container {
+            width: 100%;
+            background-color: aqua
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <span class="tab-container">
+            <span idx=0>Tab1</span>
+            <span idx=1>Tab2</span>
+        </span>
+        <div class=dd>
+            <div>1</div>
+            <div style=display:none>2</div>
+        </div>
+    </div>
+    <script>
+        const el = document.querySelector('span.tab-container')
+        const text = document.querySelector('div.dd').children
+        el.addEventListener('click', (event) => {
+            const idx = event.target.getAttribute('idx')
+            console.log(idx)
+            Array.from(text, (dom, i) => {
+                if (i == idx) {
+                    dom.style.display = 'block'
+                } else {
+                    dom.style.display = 'none'
+                }
+            })
+
+        })
+    </script>
+</body>
+
+</html>

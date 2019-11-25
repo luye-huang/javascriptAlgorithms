@@ -7,4 +7,4 @@
 // console.log(heap.pop());
 // console.log(heap.value());
 
-var tree = new BinaryTree();
+var tree =new BinaryTree();
