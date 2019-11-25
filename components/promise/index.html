@@ -1,12 +1,55 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Promise</title>
 </head>
+
 <body>
+    <script src="sample.js"></script>
     <script src='index.js'></script>
+
+    <script>
+        function pp(func) {
+            self = this
+            self.status = 'pending'
+            self.value = null
+            self.resolveList = []
+            func(_resolve.bind(this), _reject.bind(this))
+            function _resolve(val) {
+                self.value = val
+                self.status = 'resolved'
+                self.resolveList.forEach(fn => fn())
+            }
+            function _reject() {
+                self.status = 'rejected'
+            }
+            function resolvePromise(p, val){
+                _resolve(val)
+            }
+        }
+        pp.prototype.then = function (resolve, reject) {
+            if (this.status == 'resolved') {
+                resolve(this.value)
+            } else if (this.status == 'pending') {
+                this.resolveList.push(() => {
+                    resolve(this.value)
+                })
+            }
+        }
+        const test = new pp(function (resolve) {
+            setTimeout(() => {
+                resolve(33)
+            }, 100)
+
+        })
+        //test.then((res) => {
+        //    console.log(res)
+        //})
+    </script>
 </body>
+
 </html>

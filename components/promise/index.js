@@ -1,63 +1,111 @@
-function promiseLike(fn) {
+// const Prom = require('./sample')
+function PromiseLike(fn) {
     if (typeof fn !== 'function') {
         throw TypeError('it has to be a function to initialize')
     }
-    this.status = 'pending'
-    this.value = null
-    this.fulfills = []
+    const self = this
+    self.status = 'pending'
+    self.value = null
+    self.resolveList = []
+    self.rejectList = []
 
-    this._resolve = function (value) {
-        this.status = 'fulfilled'
-        this.value = value
-        this.fulfills.forEach(fn => fn())
+    function _resolve(value) {
+        self.status = 'resolved'
+        self.value = value
+        self.resolveList.forEach(fn => fn())
     }
-    this._reject = function () {
-        this.status = 'rejected'
+    function _reject(err) {
+        self.status = 'rejected'
+        throw Error(err)
     }
+
     try {
-        fn(this._resolve.bind(this), this._reject.bind(this))
+        fn(_resolve.bind(this), _reject.bind(this))
     } catch (err) {
-        this.reject()
+        _reject(err)
     }
 }
 
-promiseLike.prototype.then = function (resolve, reject) {
+function resolvePromise(promise, val, resolve, reject) {
+    resolve(val)
+}
+
+PromiseLike.prototype.then = function (onResolve, onReject) {
     const self = this
-    return new promiseLike(function () {
-        if (self.status == 'fulfilled') {
-            resolve(self.value)
+    const p = new Promise(function (resolve, reject) {
+        if (self.status == 'resolved') {
+            setTimeout(() => {
+                const val = onResolve(self.value)
+                resolvePromise(p, val, resolve, reject)
+            }, 0)
         } else if (self.status == 'pending') {
-            self.fulfills.push(() => {
-                resolve(self.value)
+            self.resolveList.push(() => {
+                setTimeout(() => {
+                    const val = onResolve(self.value)
+                    resolvePromise(p, val, resolve, reject)
+                }, 0)
+            })
+            self.rejectList.push(() => {
+                setTimeout(() => {
+                    onReject(self.value)
+                    // _resolvePromise(p, val)
+                }, 0)
+            })
+        } else if (self.status == 'rejected') {
+            self.rejectList.push(() => {
+                setTimeout(() => {
+                    onReject(self.value)
+                    // _resolvePromise(p, val)
+                }, 0)
             })
         }
     })
+    return p;
 }
 
-promiseLike.all = function () {
-    console.log('all')
+PromiseLike.all = function (list) {
+    return new PromiseLike((resolve, reject) => {
+        let ret = [], count = 0
+        list.forEach((p, idx) => {
+            p.then((data) => {
+                ret[i] = data
+                count++
+                if (count == list.length) {
+                    resolve(ret)
+                }
+            }, reject)
+        });
+    })
 }
 
-const res = 10
-// let p = new promiseLike(1)
-p = new promiseLike(function (resolve, reject) {
+
+let promise
+//test1: then
+// promise = new PromiseLike((resolve, reject) => {
+//     resolve(123);
+// });
+// promise.then((value) => {
+//     console.log('value1', value);
+// });
+
+// test2: async then
+
+promise = new PromiseLike(function (resolve, reject) {
     setTimeout(function () {
-        if (res) {
-            resolve(res)
-        } else {
-            reject('error')
-        }
-    }, 1000)
-})
-p.then(function (v) {
-    console.log(v)
-})
+        resolve(123);
+    }, 1000);
+});
 
-promiseLike.all()
+promise.then(function (value) {
+    console.log('value1', value);
+}, function (reason) {
+    console.log('reason1', reason);
+});
 
 
-//test of then chain
-let promise = new promiseLike((resolve, reject) => {
+// test3: then chain
+
+promise = new PromiseLike((resolve, reject) => {
     resolve(123);
 });
 
