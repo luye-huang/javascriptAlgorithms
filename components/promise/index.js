@@ -31,6 +31,8 @@ function resolvePromise(promise, val, resolve, reject) {
 }
 
 PromiseLike.prototype.then = function (onResolve, onReject) {
+    onResolve = typeof onResolve == 'function' ? onResolve : (value) => { return value }
+    onResolve = typeof onReject == 'function' ? onReject : (err) => { throw err }
     const self = this
     const p = new Promise(function (resolve, reject) {
         if (self.status == 'resolved') {
@@ -90,17 +92,17 @@ let promise
 
 // test2: async then
 
-promise = new PromiseLike(function (resolve, reject) {
-    setTimeout(function () {
-        resolve(123);
-    }, 1000);
-});
+// promise = new PromiseLike(function (resolve, reject) {
+//     setTimeout(function () {
+//         resolve(123);
+//     }, 1000);
+// });
 
-promise.then(function (value) {
-    console.log('value1', value);
-}, function (reason) {
-    console.log('reason1', reason);
-});
+// promise.then(function (value) {
+//     console.log('value1', value);
+// }, function (reason) {
+//     console.log('reason1', reason);
+// });
 
 
 // test3: then chain
